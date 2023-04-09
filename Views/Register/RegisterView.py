@@ -1,4 +1,4 @@
-from kivy.uix.widget import Widget
+from kivy.uix.screenmanager import Screen
 
-class RegisterView(Widget):
+class RegisterView(Screen):
     pass
