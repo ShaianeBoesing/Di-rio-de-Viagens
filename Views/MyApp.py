@@ -4,10 +4,14 @@ from kivy.lang.builder import Builder
 from Views.Main.MainView import MainView
 from Views.Register.RegisterView import RegisterView
 
+from kivymd.app import MDApp
+
 class WindowManager(ScreenManager):
 	pass
 
-kv = Builder.load_file("Views/my.kv")
+Builder.load_file("Views/my.kv")
+
 class MyApp(App):
 	def build(self):
-		return kv
+		return WindowManager()
+  

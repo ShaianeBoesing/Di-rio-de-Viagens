@@ -1,9 +1,9 @@
-WindowManager:
-  MainView:
-  RegisterView:
+#: import NoTransition kivy.uix.screenmanager.NoTransition
+
+<Screen>:
+  on_leave: app.previous_screen = self.name
 
 <MainView>
-  name: "main"
   GridLayout:
     padding: 30, 50, 30, 50
     cols: 1
@@ -13,7 +13,6 @@ WindowManager:
       size_hint_y: 0.5
 
     Label:
-      id:label
       text: "Entre ou Registre-se"
 
     GridLayout:
@@ -23,14 +22,14 @@ WindowManager:
 
       Button:
         text: "Login"
-        on_release:label.text = "Redirecionando..."
+        on_press:
 
       Button:
         text: "Registrar"
-        on_release:app.root.current = "register"
+        on_release:
+          app.root.current = "register"
 
 <RegisterView>
-  name: "register"
   GridLayout:
     padding: 30, 50, 30, 50
     cols: 1
@@ -40,7 +39,6 @@ WindowManager:
       size_hint_y: 0.5
 
     Label:
-      id:label
       text: "Registre-se"
 
     GridLayout:
@@ -50,8 +48,16 @@ WindowManager:
 
       Button:
         text: "Voltar"
-        on_release:app.root.current = "main"
+        on_release:
+          root.manager.current = app.previous_screen
 
       Button:
         text: "Registrar"
-        on_release:label.text = "Redirecionando..."
+        on_release: root.register()
+
+<WindowManager>:
+  transition: NoTransition()
+  MainView:
+    name: "main"
+  RegisterView:
+    name: "register"
