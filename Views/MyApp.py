@@ -9,9 +9,10 @@ from kivymd.app import MDApp
 class WindowManager(ScreenManager):
 	pass
 
-Builder.load_file("Views/my.kv")
+Builder.load_file("Views/TravelDiary.kv")
 
 class MyApp(App):
 	def build(self):
+		self.title = 'Diário de Viagens'
 		return WindowManager()
   
