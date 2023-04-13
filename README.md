@@ -1,4 +1,4 @@
-~~# Diario de Viagens
+~# Diario de Viagens
 
 Instale:
 - Kivy
