@@ -1,5 +1,4 @@
-# Press the green button in the gutter to run the script.
-from Views.MainView import MainView
+from Views.MyApp import MyApp
 
 if __name__ == '__main__':
-    MainView().show()
+    MyApp().run()

@@ -1,1 +1,2 @@
-.idea
+*.cpython-39.pyc
+.idea/
