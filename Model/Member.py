@@ -1,4 +1,4 @@
-from Model.Database import Database
+from Database.Database import Database
 
 
 class Member:
@@ -15,8 +15,7 @@ class Member:
 		if self.__id is None:
 			# Insere um novo objeto no banco de dados
 			values = {"name": self.__name}
-			db.insert("members", values)
-			self.__id = db.get_last_id()
+			self.__id = db.insert("members", values)
 		else:
 			# Atualiza um objeto existente no banco de dados
 			values = {"name": self.__name}

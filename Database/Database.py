@@ -11,6 +11,9 @@ class Database:
         query = f"INSERT INTO {table_name} ({columns}) VALUES ({params})"
         self.cursor.execute(query, tuple(values.values()))
         self.connection.commit()
+        query = "SELECT last_insert_rowid()"
+        self.cursor.execute(query)
+        return self.cursor.fetchone()[0]
 
     def select_all(self, table_name):
         query = f"SELECT * FROM {table_name}"
