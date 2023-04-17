@@ -1,6 +1,6 @@
 import sqlite3
 from Model.User import User
-import _md5
+import hashlib
 
 class UserController:
     def __init__(self):
@@ -18,7 +18,6 @@ class UserController:
         self.conn.commit()
 
     def register_user(self, username:str, name:str, password:str, con_password:str):
-        # Check if the username is already taken
         cursor = self.conn.cursor()
         cursor.execute('SELECT * FROM travellers WHERE username=?', (username,))
         result = cursor.fetchone()
@@ -38,17 +37,44 @@ class UserController:
         if con_password != password:
             return False, 'A senha e confirmação da senha não são iguais!'
 
+        password = self.md5_hash_password(password)
+
         cursor.execute('INSERT INTO travellers (username, name, password) VALUES (?, ?, ?)',
                        (username, name, password))
         self.conn.commit()
         print('Criado')
         return True, 'Viajante criado com sucesso!'
 
-    def get_user_by_username(self, username):
+    def login(self, username: str, password: str):
+        cursor = self.conn.cursor()
+        cursor.execute('SELECT * FROM travellers WHERE username=?', (username,))
+        result = cursor.fetchone()
+        if result is None:
+            return False, 'Usuário não registrado!'
+
+        stored_user = self.get_user_by_username(username)
+
+        #better to be safe than sorry
+        if stored_user is None:
+            return False, 'Usuário não encontrado'
+
+        if stored_user.password == self.md5_hash_password(password):
+            return True, f'Entrou como {username}'
+        else:
+            return False, 'Senha incorreta!'
+
+    def get_user_by_username(self, username: str):
         # Retrieve a user by username
         cursor = self.conn.cursor()
-        cursor.execute('SELECT * FROM viajantes WHERE username=?', (username,))
+        cursor.execute('SELECT * FROM travellers WHERE username=?', (username,))
         result = cursor.fetchone()
         if result is None:
             return None
         return User(result[1], result[2], result[3])
+
+    def md5_hash_password(self, password: str):
+        hashed_password = hashlib.md5(password.encode())
+        hashed_password = hashed_password.hexdigest()
+
+        return hashed_password
+

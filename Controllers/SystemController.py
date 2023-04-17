@@ -1,22 +1,30 @@
-from MemberController import MemberController
-from UserController import UserController
+from kivy.app import App
+from kivy.uix.screenmanager import ScreenManager
+from kivy.lang.builder import Builder
+from Views.Member.MemberCreate import MemberCreate
+from Views.Member.MemberList import MemberList
+from Views.Main.MainView import MainView
+from Views.Register.RegisterView import RegisterView
+from Views.Login.LoginView import LoginView
+from Controllers.MemberController import MemberController
+from Controllers.UserController import UserController
+from kivymd.app import MDApp
 
-class SystemController:
-    def __init__(self):
-        self.__MemberController = MemberController()
-        self.__UserController = UserController()
 
-        self.__SystemView = SystemView()
-        self.main_loop()
+class WindowManager(ScreenManager):
+	def __init__(self, **kwargs):
+		super(MyApp, self).__init__(**kwargs)
+		self.__user_controller = UserController()
+class MyApp(App):
+	def __init__(self, **kwargs):
+		super(MyApp, self).__init__(**kwargs)
+		self.__user_controller = UserController()
 
-    def main_loop(self):
-        while True:
-          control_flow_value = self.SystemView.open()
-
-          if control_flow_value == 0:
-            break
-          elif control_flow_value == 1:
-            self.__UserController.login()
-            #insira if statement para chamar outra função da classe sistema relacionada a tela principal do sistema
-          elif control_flow_value == 2:
-            self.__UserController.signin()
+	def build(self):
+		sm = ScreenManager()
+		sm.add_widget(MainView(name='main_view'))
+		sm.add_widget(RegisterView(self.__user_controller, name='register_view'))
+		sm.add_widget(LoginView(self.__user_controller, name='login_view'))
+		sm.add_widget(MemberCreate(name='member_create'))
+		sm.add_widget(MemberList(name='member_list'))
+		return sm

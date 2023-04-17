@@ -20,6 +20,7 @@ class User:
     def name(self, new_name: str):
         self.name = new_name
 
+    # a senha já chega no model hasheada pelo controller
     @property
     def password(self):
         return self.__password
