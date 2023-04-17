@@ -32,7 +32,7 @@ class UserController:
             return False, 'Nome de usuário deve ter mais de 3 caracteres'
         if len(name) < 3:
             return False, 'Nome deve ter mais de 3 caracteres'
-        if not re.match(r"^[a-zà-ú]+(\s[a-zà-ú]+)*$", name):
+        if not re.match(r"^[A-Za-zà-ú]+(\s[A-Za-zà-ú]+)*$", name):
             return False, 'O nome não deve conter caracteres especiais ou números'
         if len(password) < 3:
             return False, 'Senha deve ter mais de 3 caracteres'

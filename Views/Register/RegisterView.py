@@ -77,7 +77,7 @@ class RegisterView(Screen):
             self.name_input.text = ''
             self.password_input.text = ''
             self.password_input.text = ''
-            self.confirm_password_input = ''
+            self.confirm_password_input.text = ''
             self.manager.transition.direction = "left"
             self.manager.current = "main"
         else:
