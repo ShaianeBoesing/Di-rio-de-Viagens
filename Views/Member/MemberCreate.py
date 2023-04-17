@@ -1,4 +1,5 @@
 from kivy.app import App
+from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import Screen, SlideTransition
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
@@ -28,8 +29,12 @@ class MemberCreate(Screen):
 		self.name_input.text = ""
 	
 	def save_member(self, *args):
-		self.controller.create_member(self.name_input.text)
-		self.manager.current = 'member_list'
+		if not self.name_input.text.strip():
+			popup = Popup(title='Erro', content=Label(text='O nome não pode ser deixado em branco.'), size_hint=(None, None), size=(400, 200))
+			popup.open()
+		else:
+			self.controller.create_member(self.name_input.text)
+			self.manager.current = 'member_list'
 	
 	def cancel(self, *args):
 		self.manager.current = 'member_list'
