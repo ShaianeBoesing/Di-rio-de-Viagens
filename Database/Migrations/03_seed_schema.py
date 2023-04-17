@@ -18,7 +18,7 @@ cursor.execute("""
 
 # Inserir dados na tabela members
 cursor.execute("""
-  INSERT INTO members (name, traveller_id)
+  INSERT INTO members (name, trip_id)
   VALUES ('Bob', 1);
 """)
 
