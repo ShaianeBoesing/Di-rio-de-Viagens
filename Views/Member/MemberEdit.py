@@ -13,24 +13,33 @@ class MemberEdit(Screen):
 		super().__init__(**kwargs)
 		self.member_id = member_id
 		self.controller = MemberController()
+		layout = GridLayout(cols=1, padding=(30, 50, 30, 50), pos_hint={'center_x': 0.5, 'center_y': 0.5})
 		
-		layout = GridLayout(cols=2)
-		
-		# Labels e Inputs
-		name_label = Label(text='Nome:')
-		layout.add_widget(name_label)
+		# Adiciona título ao layout
+		layout.add_widget(Label(text="Editar Membro"))
+
+		# cria GridLayout para os inputs e adiciona ao Layout Base
+		input_grid = GridLayout(cols=2, size_hint_y=0.6, size=layout.size, padding=(0, 0, 0, 50))
+		layout.add_widget(input_grid)
+
+		#Adiciona Label e Input ao input_grid de inputs
+		input_grid.add_widget(Label(text="Nome do membro:"))
 		self.name_input = TextInput(multiline=False)
-		layout.add_widget(self.name_input)
+		input_grid.add_widget(self.name_input)
 		
-		# Botões
-		save_button = Button(text='Salvar')
-		save_button.bind(on_press=self.save_member)
-		layout.add_widget(save_button)
-		
-		cancel_button = Button(text='Cancelar')
-		cancel_button.bind(on_press=self.cancel)
-		layout.add_widget(cancel_button)
-		
+		# cria GridLayout para os buttons e adiciona ao Layout Base
+		button_grid = GridLayout(cols=2, size_hint_y=0.2, size=layout.size)
+		layout.add_widget(button_grid)
+
+
+		# cria botões de voltar e salvar e adiciona ao button_grid
+		return_button = Button(text="Voltar")
+		return_button.bind(on_press=self.on_return)
+		button_grid.add_widget(return_button)
+		register_button = Button(text="Salvar")
+		register_button.bind(on_press=self.save_member)
+		button_grid.add_widget(register_button)
+
 		# Adiciona o layout principal à tela
 		self.add_widget(layout)
 	
@@ -45,12 +54,12 @@ class MemberEdit(Screen):
 			popup.open()
 		else:
 			self.controller.update_member(
-				self.member_id,
+				member_id=self.member_id,
 				name=self.name_input.text
 			)
 			self.manager.current = 'member_list'
 			self.manager.transition = SlideTransition(direction="right")
 	
-	def cancel(self, *args):
+	def on_return(self, *args):
 		self.manager.current = 'member_list'
 		self.manager.transition = SlideTransition(direction="right")

@@ -34,7 +34,7 @@ class MemberList(Screen):
 		
 		# Tabela
 		scrollview = ScrollView()
-		table_layout = GridLayout(cols=2, size_hint_y=None)
+		table_layout = GridLayout(cols=2, size_hint_y=None, padding=(30, 50, 30, 50))
 		table_layout.bind(minimum_height=table_layout.setter('height'))
 		
 		for member in self.members:

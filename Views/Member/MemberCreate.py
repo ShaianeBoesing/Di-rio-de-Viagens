@@ -11,48 +11,34 @@ from Controllers.MemberController import MemberController
 class MemberCreate(Screen):
 	def __init__(self, **kwargs):
 		super().__init__(**kwargs)
-		# self.controller = MemberController()
-		# self.layout = GridLayout(cols=2)
-		# self.add_widget(self.layout)
-		# self.name_label = Label(text='Nome:')
-		# self.layout.add_widget(self.name_label)
-		# self.name_input = TextInput(multiline=False)
-		# self.layout.add_widget(self.name_input)
-		# self.save_button = Button(text='Salvar')
-		# self.save_button.bind(on_press=self.save_member)
-		# self.layout.add_widget(self.save_button)
-		# self.cancel_button = Button(text='Voltar')
-		# self.cancel_button.bind(on_press=self.cancel)
-		# self.layout.add_widget(self.cancel_button)
+		# Layout base
 		layout = GridLayout(cols=1, padding=(30, 50, 30, 50), pos_hint={'center_x': 0.5, 'center_y': 0.5})
 
-		# Add the "Registrar" label to the layout
-		layout.add_widget(Label(text="Criar membro"))
+		# Adiciona título ao layout
+		layout.add_widget(Label(text="Criar Membro"))
 
-		# Create a GridLayout to hold the input fields
+		# cria GridLayout para os inputs e adiciona ao Layout Base
 		input_grid = GridLayout(cols=2, size_hint_y=0.6, size=layout.size, padding=(0, 0, 0, 50))
 		layout.add_widget(input_grid)
-
-		# Add the "Nome de Usuário" label and text input to the input grid
+		
+		#Adiciona Label e Input ao input_grid de inputs
 		input_grid.add_widget(Label(text="Nome do membro:"))
 		self.name_input = TextInput()
 		input_grid.add_widget(self.name_input)
-
-		# Create a GridLayout to hold the buttons
+		
+		# cria GridLayout para os buttons e adiciona ao Layout Base
 		button_grid = GridLayout(cols=2, size_hint_y=0.2, size=layout.size)
 		layout.add_widget(button_grid)
 
-		# Create the "Voltar" button and bind it to the on_return function
+		# cria botões de voltar e salvar e adiciona ao button_grid
 		return_button = Button(text="Voltar")
 		return_button.bind(on_press=self.on_return)
 		button_grid.add_widget(return_button)
-
-		# Create the "Registrar" button and bind it to the on_register function
-		register_button = Button(text="Criar Membro")
+		register_button = Button(text="Salvar")
 		register_button.bind(on_press=self.save_member)
 		button_grid.add_widget(register_button)
 
-		# Add the register layout to the screen
+		# adiciona o layout base à Screen
 		self.add_widget(layout)
 	
 	def on_pre_enter(self, *args):
