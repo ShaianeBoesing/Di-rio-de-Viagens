@@ -1,6 +1,7 @@
 import sqlite3
 from Model.User import User
-import _md5
+import hashlib
+import re
 
 class UserController:
     def __init__(self):
@@ -31,7 +32,7 @@ class UserController:
             return False, 'Nome de usuário deve ter mais de 3 caracteres'
         if len(name) < 3:
             return False, 'Nome deve ter mais de 3 caracteres'
-        if not name.isalpha():
+        if not re.match(r"^[a-zà-ú]+(\s[a-zà-ú]+)*$", name):
             return False, 'O nome não deve conter caracteres especiais ou números'
         if len(password) < 3:
             return False, 'Senha deve ter mais de 3 caracteres'
@@ -39,7 +40,7 @@ class UserController:
             return False, 'A senha e confirmação da senha não são iguais!'
 
         cursor.execute('INSERT INTO travellers (username, name, password) VALUES (?, ?, ?)',
-                       (username, name, password))
+                       (username, name, hashlib.md5(password.encode()).hexdigest()))
         self.conn.commit()
         print('Criado')
         return True, 'Viajante criado com sucesso!'
