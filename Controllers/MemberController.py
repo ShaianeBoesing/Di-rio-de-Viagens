@@ -26,9 +26,19 @@ class MemberController:
 			member.delete()
 	
 	@staticmethod
-	def list_members_by_trip():
-		pass
-
-	@staticmethod
-	def list_members_by_trip():
-		pass
+	def list_members_by_trip(trip_id=None):
+		# Se o ID da viagem não for fornecido, retorna uma lista vazia
+		if trip_id is None:
+			return []
+		
+		results = Member.list_by_trip(trip_id)
+		# results = db.select(
+		
+		# Cria uma lista de objetos Member com as informações da consulta
+		members = []
+		for result in results:
+			member = {'name': result.name, 'id': result.id}
+			members.append(member)
+		
+		return members
+	

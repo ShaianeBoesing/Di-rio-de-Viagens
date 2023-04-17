@@ -4,7 +4,7 @@ import _md5
 
 class UserController:
     def __init__(self):
-        self.conn = sqlite3.connect('../Database/Migrations/diary.db')
+        self.conn = sqlite3.connect('Database/Migrations/diary.db')
         self.create_user_table()
 
     def create_user_table(self):
@@ -17,20 +17,32 @@ class UserController:
                                             )''')
         self.conn.commit()
 
-    def register_user(self, username, name, password):
+    def register_user(self, username:str, name:str, password:str, con_password:str):
         # Check if the username is already taken
         cursor = self.conn.cursor()
         cursor.execute('SELECT * FROM travellers WHERE username=?', (username,))
         result = cursor.fetchone()
         if result is not None:
-            print("deu nao")
-            return False
+            print('deu nao')
+            return False, 'Nome de usuário já existente!'
 
         # Create a new user and add it to the database
+        if len(username) < 3:
+            return False, 'Nome de usuário deve ter mais de 3 caracteres'
+        if len(name) < 3:
+            return False, 'Nome deve ter mais de 3 caracteres'
+        if not name.isalpha():
+            return False, 'O nome não deve conter caracteres especiais ou números'
+        if len(password) < 3:
+            return False, 'Senha deve ter mais de 3 caracteres'
+        if con_password != password:
+            return False, 'A senha e confirmação da senha não são iguais!'
+
         cursor.execute('INSERT INTO travellers (username, name, password) VALUES (?, ?, ?)',
                        (username, name, password))
         self.conn.commit()
-        return True
+        print('Criado')
+        return True, 'Viajante criado com sucesso!'
 
     def get_user_by_username(self, username):
         # Retrieve a user by username
@@ -40,6 +52,3 @@ class UserController:
         if result is None:
             return None
         return User(result[1], result[2], result[3])
-
-a = UserController()
-a.register_user('asad','123','asdv')

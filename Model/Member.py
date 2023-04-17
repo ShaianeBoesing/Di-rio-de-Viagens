@@ -73,6 +73,23 @@ class Member:
 		# Retorna o resultado da consulta
 		return result[0][0]
 	
+	@staticmethod
+	def list_by_trip(trip_id: int):
+		# Conexão com o banco de dados
+		db = Database()
+		
+		# Faz a consulta no banco de dados para obter a lista de membros
+		results = db.select(f"SELECT * FROM members WHERE trip_id={trip_id}")
+
+		# Cria uma lista de objetos Member com as informações da consulta
+		members = []
+		for result in results:
+			member = Member(result[1], result[2])
+			member.__id = result[0]
+			members.append(member)
+		
+		return members
+	
 	@property
 	def name(self) -> str:
 		return self.__name
@@ -80,6 +97,14 @@ class Member:
 	@name.setter
 	def name(self, name: str) -> None:
 		self.__name = name
+	
+	@property
+	def trip_id(self) -> str:
+		return self.__trip_id
+	
+	@trip_id.setter
+	def trip_id(self, trip_id: int) -> None:
+		self.__trip_id = trip_id
 	
 	@property
 	def id(self):
