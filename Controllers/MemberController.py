@@ -4,7 +4,8 @@ from Model.Member import Member
 class MemberController:
 	@staticmethod
 	def create_member(name: str) -> Member:
-		member = Member(name)
+		trip_id = 1
+		member = Member(name, trip_id)
 		member.save()
 		return member
 	

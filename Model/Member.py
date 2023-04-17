@@ -2,8 +2,8 @@ from Database.Database import Database
 
 
 class Member:
-	def __init__(self, name: str, traveler_id: int):
-		self.__traveler_id = traveler_id
+	def __init__(self, name: str, trip_id: int):
+		self.__trip_id = trip_id
 		self.__name = name
 		self.__id = None
 	
@@ -14,7 +14,7 @@ class Member:
 		# Verifica se o objeto já existe no banco de dados (a partir do id)
 		if self.__id is None:
 			# Insere um novo objeto no banco de dados
-			values = {"name": self.__name}
+			values = {"name": self.__name, "trip_id": self.__trip_id}
 			self.__id = db.insert("members", values)
 		else:
 			# Atualiza um objeto existente no banco de dados

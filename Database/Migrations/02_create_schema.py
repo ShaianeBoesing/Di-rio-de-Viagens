@@ -29,8 +29,8 @@ cursor.execute("""
   CREATE TABLE members (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
-    traveller_id INTEGER NOT NULL,
-    FOREIGN KEY(traveller_id) REFERENCES traveller_id(id)
+    trip_id INTEGER NOT NULL,
+    FOREIGN KEY(trip_id) REFERENCES trips(id)
   );
 """)
 
