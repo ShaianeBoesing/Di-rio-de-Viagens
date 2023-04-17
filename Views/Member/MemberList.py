@@ -20,10 +20,10 @@ class MemberList(Screen):
 		self.members = MemberController.list_members_by_trip(1)
 	
 	def load(self):
-		# Layout principal
-		self.clear_widgets()
-		self.load_members()
+		self.clear_widgets() # Limpa todos os widgets da tela para não se sobrepor
+		self.load_members() # Carrega o self.members
 		
+		# Layout principal
 		layout = BoxLayout(orientation='vertical')
 		
 		# Cabeçalho
@@ -39,21 +39,24 @@ class MemberList(Screen):
 		
 		for member in self.members:
 			name_label = Label(text=member['name'], font_size='16sp', halign='center', valign='middle')
+			
+			# Layout para actions
 			actions_layout = BoxLayout(size_hint_y=None, padding=10, size_hint=(None, None), size=(400, dp(40)), minimum_height=dp(40))
 			actions_layout.cols = 2  # definir duas colunas
 			actions_layout.col_default_width = 200  # definir largura da coluna como 200 pixels
-			edit_button = Button(
-				text="Editar", size_hint=(None, None), size=(200, dp(40)), font_size="16sp"
-			)
-			delete_button = Button(
-				text="Excluir", size_hint=(None, None), size=(200, dp(40)), font_size="16sp"
-			)
+
+			# Adiciona o nome à coluna 1 e actions_layout à coluna 2 do table_layout
+			table_layout.add_widget(name_label)
+			table_layout.add_widget(actions_layout)
+
+			# Botão de actions
+			edit_button = Button(text="Editar", size_hint=(None, None), size=(200, dp(40)), font_size="16sp")
+			delete_button = Button(text="Excluir", size_hint=(None, None), size=(200, dp(40)), font_size="16sp")
 			edit_button.bind(on_release=lambda _, member_id=member['id']: self.on_edit_member(member_id))
 			delete_button.bind(on_release=lambda _, member_id=member['id']: self.on_delete_member(member_id))
 			actions_layout.add_widget(edit_button)
 			actions_layout.add_widget(delete_button)
-			table_layout.add_widget(name_label)
-			table_layout.add_widget(actions_layout)
+			
 		scrollview.add_widget(table_layout)
 		layout.add_widget(scrollview)
 
