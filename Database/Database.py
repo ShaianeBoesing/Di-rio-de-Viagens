@@ -15,37 +15,37 @@ class Database:
     self.cursor.execute(query)
     return self.cursor.fetchone()[0]
 
-    def select_all(self, table_name):
-      query = f"SELECT * FROM {table_name}"
-      self.cursor.execute(query)
-      return self.cursor.fetchall()
+  def select_all(self, table_name):
+    query = f"SELECT * FROM {table_name}"
+    self.cursor.execute(query)
+    return self.cursor.fetchall()
 
-    def select_by_id(self, table_name, id):
-      query = f"SELECT * FROM {table_name} WHERE id=?"
-      self.cursor.execute(query, (id,))
-      return self.cursor.fetchone()
+  def select(self, query):
+    self.cursor.execute(query)
+    return self.cursor.fetchall()
 
-    def update(self, table_name, id, values):
-      set_values = ', '.join([f"{column} = ?" for column in values.keys()])
-      query = f"UPDATE {table_name} SET {set_values} WHERE id=?"
-      params = list(values.values())
-      params.append(id)
-      self.cursor.execute(query, params)
-      self.connection.commit()
+  def select_by_id(self, table_name, id):
+    query = f"SELECT * FROM {table_name} WHERE id=?"
+    self.cursor.execute(query, (id,))
+    return self.cursor.fetchone()
 
-    def delete(self, table_name, id):
-      query = f"DELETE FROM {table_name} WHERE id=?"
-      self.cursor.execute(query, (id,))
-      self.connection.commit()
+  def update(self, table_name, id, values):
+    set_values = ', '.join([f"{column} = ?" for column in values.keys()])
+    query = f"UPDATE {table_name} SET {set_values} WHERE id=?"
+    params = list(values.values())
+    params.append(id)
+    self.cursor.execute(query, params)
+    self.connection.commit()
 
-    def select(self, query):
-      self.cursor.execute(query)
-      return self.cursor.fetchall()
+  def delete(self, table_name, id):
+    query = f"DELETE FROM {table_name} WHERE id=?"
+    self.cursor.execute(query, (id,))
+    self.connection.commit()
 
-    def get_last_id(self):
-      query = "SELECT last_insert_rowid()"
-      self.cursor.execute(query)
-      return self.cursor.fetchone()[0]
+  def get_last_id(self):
+    query = "SELECT last_insert_rowid()"
+    self.cursor.execute(query)
+    return self.cursor.fetchone()[0]
 
-    def __del__(self):
-      self.connection.close()
+  def __del__(self):
+    self.connection.close()

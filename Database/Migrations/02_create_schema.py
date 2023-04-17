@@ -26,27 +26,27 @@ cursor.execute("""
 """)
 
 cursor.execute("""
-  CREATE TABLE members (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    trip_id INTEGER NOT NULL,
-    FOREIGN KEY(trip_id) REFERENCES trips(id)
-  );
+	CREATE TABLE members (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		name TEXT NOT NULL,
+		trip_id INTEGER NOT NULL,
+		FOREIGN KEY(trip_id) REFERENCES trips(id)
+	);
 """)
 
 cursor.execute("""
-  CREATE TABLE spots (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    start_hour DATETIME NOT NULL,
-    end_hour DATETIME NOT NULL,
-    status TEXT NOT NULL,
-    value REAL NOT NULL,
-    trip_id INTEGER NOT NULL,
-    category_id INTEGER NOT NULL,
-    FOREIGN KEY(trip_id) REFERENCES trips(id),
-    FOREIGN KEY(category_id) REFERENCES categories(id)
-  );
+	CREATE TABLE spots (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		name TEXT NOT NULL,
+		start_hour DATETIME NOT NULL,
+		end_hour DATETIME NOT NULL,
+		status TEXT NOT NULL,
+		value REAL NOT NULL,
+		trip_id INTEGER NOT NULL,
+		category_id INTEGER NOT NULL,
+		FOREIGN KEY(trip_id) REFERENCES trips(id),
+		FOREIGN KEY(category_id) REFERENCES categories(id)
+	);
 """)
 
 cursor.execute("""
