@@ -106,5 +106,5 @@ class MemberList(Screen):
 		popup.open()
 	
 	def on_back(self, *args):
-		self.manager.current = 'member_list'
-		self.manager.transition = SlideTransition(direction="left")
+		self.manager.transition.direction = "right"
+		self.manager.current = "main"

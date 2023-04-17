@@ -25,6 +25,7 @@ class MyApp(App):
 		sm = ScreenManager()
 		sm.add_widget(MainView(name='main_view'))
 		sm.add_widget(RegisterView(self.__user_controller, name='register_view'))
+		sm.add_widget(MemberList(name='member_list'))
 		sm.add_widget(MemberCreate(name='member_create'))
 		sm.add_widget(MemberEdit(name='member_edit'))
 		return sm
