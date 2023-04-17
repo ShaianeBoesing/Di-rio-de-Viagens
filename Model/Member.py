@@ -19,7 +19,7 @@ class Member:
 		else:
 			# Atualiza um objeto existente no banco de dados
 			values = {"name": self.__name}
-			db.update("members", self.__id, values)
+			db.update("members", name=self.__name)
 	
 	@staticmethod
 	def show(member_id: int) -> 'Member':
@@ -34,17 +34,17 @@ class Member:
 			return None
 		
 		# Cria e retorna um objeto Member com as informações da consulta
-		member = Member(result[1])
+		member = Member(result[1], result[2])
 		member.__id = result[0]
 		return member
 	
 	def update(self, **kwargs) -> None:
 		# Atualiza os atributos do objeto com os novos valores
-		for key, value in kwargs.items():
-			setattr(self, f'_{key}', value)
-		
+		db = Database()
+
 		# Salva as informações atualizadas no banco de dados
-		self.save()
+		values = {"name": kwargs['name']}
+		db.update("members", self.__id, values)
 	
 	def delete(self) -> None:
 		# Conexão com o banco de dados

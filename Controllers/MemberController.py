@@ -2,6 +2,9 @@ from typing import List
 from Model.Member import Member
 
 class MemberController:
+	def __init__(self):
+		self.__table_name = 'members'
+
 	@staticmethod
 	def create_member(name: str) -> Member:
 		trip_id = 1
@@ -11,10 +14,13 @@ class MemberController:
 	
 	@staticmethod
 	def get_member(member_id: int) -> Member:
-		return Member.show(member_id)
-	
-	@staticmethod
-	def update_member(member_id: int, **kwargs) -> None:
+		member = Member.show(member_id)
+		return {
+			'id': member.id,
+			'trip_id': member.trip_id,
+			'name': member.name,
+		}
+	def update_member(self, member_id: int, **kwargs) -> None:
 		member = Member.show(member_id)
 		if member:
 			member.update(**kwargs)
