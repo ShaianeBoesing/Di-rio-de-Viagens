@@ -1,5 +1,5 @@
 class User:
-    def __init__(self, username, name, password):
+    def __init__(self, username: str, name: str, password: str):
         self.__username = username
         self.__name = name
         self.__password = password
@@ -9,7 +9,7 @@ class User:
         return self.__username
 
     @username.setter
-    def username(self, value):
+    def username(self, value: str):
         self.__username = value
 
     @property
@@ -17,13 +17,14 @@ class User:
         return self.__name
 
     @name.setter
-    def name(self, value):
+    def name(self, value: str):
         self.__name = value
 
+    # a senha já chega no model hasheada pelo controller
     @property
     def password(self):
         return self.__password
 
     @password.setter
-    def password(self, value):
+    def password(self, value: str):
         self.__password = value

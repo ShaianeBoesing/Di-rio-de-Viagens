@@ -24,7 +24,8 @@ class MainView(Screen):
         layout.add_widget(button_grid)
 
         # Add the Login button to the button grid
-        login_button = Button(text="Login")
+        login_button = Button(text="Entrar")
+        login_button.bind(on_press=self.go_to_login)
         button_grid.add_widget(login_button)
 
         # Add the Register button to the button grid
@@ -49,3 +50,8 @@ class MainView(Screen):
         # Switch to the "register" screen
         self.manager.transition.direction = "left"
         self.manager.current = "member_list"
+
+    def go_to_login(self, instance):
+        self.manager.transition.direction = "right"
+        self.manager.current = "login_view"
+
