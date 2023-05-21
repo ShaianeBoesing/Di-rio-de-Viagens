@@ -1,6 +1,5 @@
 from typing import List
 from Model.Category import Category
-from Model.TravellerCategories import TravellerCategories
 
 
 class CategoryController:
@@ -10,8 +9,7 @@ class CategoryController:
 	def create_category(self, name: str, traveller_id) -> Category:
 		new_category = Category(name)
 		category = new_category.save()
-		new_traveller_category = TravellerCategories(category.id, traveller_id)
-		new_traveller_category.save()
+		new_category.save_traveller_category(traveller_id)
 		return category
 	
 	def get_category(self, category_id: int) -> Category:

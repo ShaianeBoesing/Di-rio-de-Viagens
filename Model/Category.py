@@ -30,6 +30,7 @@ class Category:
 		db.update("categories", self.__id, values)
 	
 	def delete(self) -> None:
+		self.delete_traveller_category()
 		db = Database()
 		db.delete("categories", self.__id)
 	
@@ -57,3 +58,28 @@ class Category:
 	@property
 	def id(self):
 		return self.__id
+	
+	# Relacionamento Category e Traveller
+	def save_traveller_category(self, traveller_id):
+		db = Database()
+		values = {
+			'category_id': self.__id,
+			'traveller_id': traveller_id
+		}
+		db.insert('traveller_categories', values)
+	
+	def get_traveller_id_for_category(self):
+		db = Database()
+		category_id = self.__id
+		query = f"SELECT traveller_id FROM traveller_categories WHERE category_id={category_id}"
+		result = db.select(query)
+		if result:
+			return result[0][0]
+		return None
+	
+	def delete_traveller_category(self):
+		db = Database()
+		category_id = self.__id
+		traveller_id = self.get_traveller_id_for_category()
+		query = f"DELETE FROM traveller_categories WHERE category_id={category_id} AND traveller_id={traveller_id}"
+		db.raw_sql(query)
