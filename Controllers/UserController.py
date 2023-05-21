@@ -45,11 +45,36 @@ class UserController:
         print('Criado')
         return True, 'Viajante criado com sucesso!'
 
+    def login(self, username: str, password: str):
+        cursor = self.conn.cursor()
+        cursor.execute('SELECT * FROM travellers WHERE username=?', (username,))
+        result = cursor.fetchone()
+        if result is None:
+            return False, 'Usuário não registrado!'
+
+        stored_user = self.get_user_by_username(username)
+
+        #better to be safe than sorry
+        if stored_user is None:
+            return False, 'Usuário não encontrado'
+
+        if stored_user.password == self.md5_to_hash_password(password):
+            return True, f'Entrou como {username}'
+        else:
+            return False, 'Senha incorreta!'
+
     def get_user_by_username(self, username):
         # Retrieve a user by username
         cursor = self.conn.cursor()
-        cursor.execute('SELECT * FROM viajantes WHERE username=?', (username,))
+        cursor.execute('SELECT * FROM travellers WHERE username=?', (username,))
         result = cursor.fetchone()
         if result is None:
             return None
         return User(result[1], result[2], result[3])
+
+    def md5_to_hash_password(self, password: str):
+        hashed_password = hashlib.md5(password.encode())
+        hashed_password = hashed_password.hexdigest()
+
+        return hashed_password
+
