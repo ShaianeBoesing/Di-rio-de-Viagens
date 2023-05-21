@@ -29,8 +29,27 @@ cursor.execute("""
 	CREATE TABLE members (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		name TEXT NOT NULL,
-		trip_id INTEGER NOT NULL,
 		FOREIGN KEY(trip_id) REFERENCES trips(id)
+	);
+""")
+
+cursor.execute("""
+	CREATE TABLE traveller_members (
+		member_id INTEGER PRIMARY KEY AUTOINCREMENT,
+		traveller_id INTEGER PRIMARY KEY AUTOINCREMENT,
+		PRIMARY KEY(member_id, traveller_id),
+		FOREIGN KEY(member_id) REFERENCES members(id),
+		FOREIGN KEY(traveller_id) REFERENCES travellers(id)
+	);
+""")
+
+cursor.execute("""
+	CREATE TABLE traveller_categories (
+		category_id INTEGER PRIMARY KEY AUTOINCREMENT,
+		traveller_id INTEGER PRIMARY KEY AUTOINCREMENT,
+		PRIMARY KEY(member_id, traveller_id),
+		FOREIGN KEY(category_id) REFERENCES categories(id),
+		FOREIGN KEY(traveller_id) REFERENCES travellers(id)
 	);
 """)
 
