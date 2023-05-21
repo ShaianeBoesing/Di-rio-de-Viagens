@@ -46,6 +46,11 @@ class Database:
     query = "SELECT last_insert_rowid()"
     self.cursor.execute(query)
     return self.cursor.fetchone()[0]
+  
+  def raw_sql(self, sql):
+    self.cursor.execute(sql)
+    self.connection.commit()
+    return self.cursor.fetchall()
 
   def __del__(self):
     self.connection.close()

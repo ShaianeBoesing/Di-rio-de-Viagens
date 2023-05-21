@@ -30,6 +30,7 @@ class Member:
 		db.update("members", self.__id, values)
 	
 	def delete(self) -> None:
+		self.delete_traveller_member()
 		db = Database()
 		db.delete("members", self.__id)
 		
@@ -56,3 +57,29 @@ class Member:
 	@property
 	def id(self):
 		return self.__id
+
+	# Relacionamento Member e Traveller
+	def save_traveller_member(self, traveller_id):
+		db = Database()
+		values = {
+			'member_id': self.__id,
+			'traveller_id': traveller_id
+		}
+		db.insert('traveller_members', values)
+		
+	def get_traveller_id_for_member(self):
+		db = Database()
+		member_id = self.__id
+		query = f"SELECT traveller_id FROM traveller_members WHERE member_id={member_id}"
+		result = db.select(query)
+		if result:
+			return result[0][0]
+		return None
+
+	def delete_traveller_member(self):
+		db = Database()
+		member_id = self.__id
+		traveller_id = self.get_traveller_id_for_member()
+		query = f"DELETE FROM traveller_members WHERE member_id={member_id} AND traveller_id={traveller_id}"
+		db.raw_sql(query)
+	

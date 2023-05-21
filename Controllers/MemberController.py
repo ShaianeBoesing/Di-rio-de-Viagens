@@ -1,6 +1,5 @@
 from typing import List
 from Model.Member import Member
-from Model.TravellerMembers import TravellerMembers
 
 class MemberController:
 	def __init__(self):
@@ -9,8 +8,7 @@ class MemberController:
 	def create_member(self, name: str, traveller_id) -> Member:
 		new_member = Member(name)
 		member = new_member.save()
-		new_traveller_member = TravellerMembers(member.id, traveller_id)
-		new_traveller_member.save()
+		new_member.save_traveller_member(traveller_id)
 		return member
 	
 	def get_member(self, member_id: int) -> Member:
