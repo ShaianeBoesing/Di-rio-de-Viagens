@@ -36,8 +36,8 @@ cursor.execute("""
 
 # Inserir dados na tabela categories
 cursor.execute("""
-  INSERT INTO categories (name, average_spent, traveller_id)
-  VALUES ('Comida', 50.00, 1);
+  INSERT INTO categories (name)
+  VALUES ('Comida');
 """)
 
 # Inserir dados na tabela spot_members

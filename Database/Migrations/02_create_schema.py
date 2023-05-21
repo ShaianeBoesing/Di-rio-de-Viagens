@@ -80,10 +80,7 @@ cursor.execute("""
 cursor.execute("""
 	CREATE TABLE categories (
 	  id INTEGER PRIMARY KEY AUTOINCREMENT,
-	  name TEXT NOT NULL,
-	  average_spent REAL NOT NULL,
-	  traveller_id INTEGER NOT NULL,
-	  FOREIGN KEY(traveller_id) REFERENCES traveller(id)
+	  name TEXT NOT NULL
 	);
 """)
 
