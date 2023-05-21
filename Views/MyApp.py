@@ -19,6 +19,7 @@ class MyApp(App):
 	def __init__(self, **kwargs):
 		super(MyApp, self).__init__(**kwargs)
 		self.__user_controller = UserController()
+		self.__member_controller = MemberController()
 
 
 		# Perform any necessary setup tasks here
@@ -27,8 +28,8 @@ class MyApp(App):
 		sm.add_widget(MainView(name='main_view'))
 		sm.add_widget(RegisterView(self.__user_controller, name='register_view'))
 		sm.add_widget(LoginView(self.__user_controller, name='login_view'))
-		sm.add_widget(MemberList(name='member_list'))
-		sm.add_widget(MemberCreate(name='member_create'))
-		sm.add_widget(MemberEdit(name='member_edit'))
+		sm.add_widget(MemberList(self.__member_controller, name='member_list'))
+		sm.add_widget(MemberCreate(self.__member_controller, name='member_create'))
+		sm.add_widget(MemberEdit(self.__member_controller, name='member_edit'))
 		return sm
 

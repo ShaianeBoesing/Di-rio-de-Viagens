@@ -6,16 +6,14 @@ class MemberController:
 	def __init__(self):
 		self.__table_name = 'members'
 
-	@staticmethod
-	def create_member(name: str, traveller_id) -> Member:
+	def create_member(self, name: str, traveller_id) -> Member:
 		new_member = Member(name)
 		member = new_member.save()
 		new_traveller_member = TravellerMembers(member.id, traveller_id)
 		new_traveller_member.save()
 		return member
 	
-	@staticmethod
-	def get_member(member_id: int) -> Member:
+	def get_member(self, member_id: int) -> Member:
 		member = Member.show(member_id)
 		return {
 			'id': member.id,
@@ -26,14 +24,12 @@ class MemberController:
 		if member:
 			member.update(**kwargs)
 	
-	@staticmethod
-	def delete_member(member_id: int) -> None:
+	def delete_member(self, member_id: int) -> None:
 		member = Member.show(member_id)
 		if member:
 			member.delete()
 	
-	@staticmethod
-	def list_members_by_traveller(traveller_id=None):
+	def list_members_by_traveller(self, traveller_id=None):
 		if traveller_id is None:
 			return []
 		

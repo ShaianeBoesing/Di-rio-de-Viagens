@@ -9,30 +9,24 @@ from Controllers.MemberController import MemberController
 
 
 class MemberEdit(Screen):
-	def __init__(self, member_id=None, **kwargs):
+	def __init__(self, controller: MemberController, member_id=None, **kwargs):
 		super().__init__(**kwargs)
 		self.member_id = member_id
-		self.controller = MemberController()
+		self.controller = controller
 		layout = GridLayout(cols=1, padding=(30, 50, 30, 50), pos_hint={'center_x': 0.5, 'center_y': 0.5})
 		
-		# Adiciona título ao layout
 		layout.add_widget(Label(text="Editar Membro"))
 
-		# cria GridLayout para os inputs e adiciona ao Layout Base
 		input_grid = GridLayout(cols=2, size_hint_y=0.6, size=layout.size, padding=(0, 0, 0, 50))
 		layout.add_widget(input_grid)
 
-		#Adiciona Label e Input ao input_grid de inputs
 		input_grid.add_widget(Label(text="Nome do membro:"))
 		self.name_input = TextInput(multiline=False)
 		input_grid.add_widget(self.name_input)
 		
-		# cria GridLayout para os buttons e adiciona ao Layout Base
 		button_grid = GridLayout(cols=2, size_hint_y=0.2, size=layout.size)
 		layout.add_widget(button_grid)
 
-
-		# cria botões de voltar e salvar e adiciona ao button_grid
 		return_button = Button(text="Voltar")
 		return_button.bind(on_press=self.on_return)
 		button_grid.add_widget(return_button)
@@ -40,7 +34,6 @@ class MemberEdit(Screen):
 		register_button.bind(on_press=self.save_member)
 		button_grid.add_widget(register_button)
 
-		# Adiciona o layout principal à tela
 		self.add_widget(layout)
 	
 	def on_pre_enter(self, *args):
