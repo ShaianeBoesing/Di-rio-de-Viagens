@@ -38,6 +38,11 @@ class MainView(Screen):
         member_button.bind(on_press=self.go_to_members)
         button_grid.add_widget(member_button)
 
+        # Add the Member button to the button grid
+        category_button = Button(text="Categorias")
+        category_button.bind(on_press=self.go_to_categories)
+        button_grid.add_widget(category_button)
+
         # Add the main layout to the screen
         self.add_widget(layout)
 
@@ -51,6 +56,11 @@ class MainView(Screen):
         self.manager.transition.direction = "left"
         self.manager.current = "member_list"
 
+    def go_to_categories(self, instance):
+        # Switch to the "register" screen
+        self.manager.transition.direction = "left"
+        self.manager.current = "category_list"
+    
     def go_to_login(self, instance):
         self.manager.transition.direction = "right"
         self.manager.current = "login_view"
