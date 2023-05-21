@@ -1,4 +1,4 @@
-from Controllers.SystemController import MyApp
+from Views.MyApp import MyApp
 
 if __name__ == '__main__':
     MyApp().run()

@@ -9,16 +9,16 @@ class User:
         return self.__username
 
     @username.setter
-    def username(self, new_username: str):
-        self.username = new_username
+    def username(self, value: str):
+        self.__username = value
 
     @property
     def name(self):
         return self.__name
 
     @name.setter
-    def name(self, new_name: str):
-        self.name = new_name
+    def name(self, value: str):
+        self.__name = value
 
     # a senha já chega no model hasheada pelo controller
     @property
@@ -26,6 +26,5 @@ class User:
         return self.__password
 
     @password.setter
-    def password(self, new_password: str):
-        self.password = new_password
-
+    def password(self, value: str):
+        self.__password = value
