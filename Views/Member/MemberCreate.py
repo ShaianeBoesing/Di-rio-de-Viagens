@@ -11,6 +11,7 @@ from Controllers.MemberController import MemberController
 class MemberCreate(Screen):
 	def __init__(self, **kwargs):
 		super().__init__(**kwargs)
+		self.TEMP_TRAVELLER_ID = 1
 		# Layout base
 		layout = GridLayout(cols=1, padding=(30, 50, 30, 50), pos_hint={'center_x': 0.5, 'center_y': 0.5})
 
@@ -49,7 +50,7 @@ class MemberCreate(Screen):
 			popup = Popup(title='Erro', content=Label(text='O nome não pode ser deixado em branco.'), size_hint=(None, None), size=(400, 200))
 			popup.open()
 		else:
-			MemberController.create_member(self.name_input.text)
+			MemberController.create_member(self.name_input.text, self.TEMP_TRAVELLER_ID)
 			self.manager.current = 'member_list'
 	
 	def on_return(self, *args):

@@ -1,15 +1,17 @@
 from typing import List
 from Model.Member import Member
+from Model.TravellerMembers import TravellerMembers
 
 class MemberController:
 	def __init__(self):
 		self.__table_name = 'members'
 
 	@staticmethod
-	def create_member(name: str) -> Member:
-		trip_id = 1
-		member = Member(name, trip_id)
-		member.save()
+	def create_member(name: str, traveller_id) -> Member:
+		new_member = Member(name)
+		member = new_member.save()
+		new_traveller_member = TravellerMembers(member.id, traveller_id)
+		new_traveller_member.save()
 		return member
 	
 	@staticmethod
@@ -17,7 +19,6 @@ class MemberController:
 		member = Member.show(member_id)
 		return {
 			'id': member.id,
-			'trip_id': member.trip_id,
 			'name': member.name,
 		}
 	def update_member(self, member_id: int, **kwargs) -> None:
@@ -32,15 +33,11 @@ class MemberController:
 			member.delete()
 	
 	@staticmethod
-	def list_members_by_trip(trip_id=None):
-		# Se o ID da viagem não for fornecido, retorna uma lista vazia
-		if trip_id is None:
+	def list_members_by_traveller(traveller_id=None):
+		if traveller_id is None:
 			return []
 		
-		results = Member.list_by_trip(trip_id)
-		# results = db.select(
-		
-		# Cria uma lista de objetos Member com as informações da consulta
+		results = Member.list_by_traveller(traveller_id)
 		members = []
 		for result in results:
 			member = {'name': result.name, 'id': result.id}

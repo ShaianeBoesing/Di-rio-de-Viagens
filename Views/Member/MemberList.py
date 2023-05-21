@@ -12,12 +12,13 @@ class MemberList(Screen):
 	def __init__(self, **kwargs):
 		super().__init__(**kwargs)
 		self.members = []
-	
+		self.TEMP_TRAVELLER_ID = 1
+
 	def on_pre_enter(self, *args):
 		self.load()
 	
 	def load_members(self):
-		self.members = MemberController.list_members_by_trip(1)
+		self.members = MemberController.list_members_by_traveller(self.TEMP_TRAVELLER_ID)
 	
 	def load(self):
 		self.clear_widgets() # Limpa todos os widgets da tela para não se sobrepor
