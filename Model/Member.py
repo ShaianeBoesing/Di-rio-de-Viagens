@@ -83,3 +83,9 @@ class Member:
 		query = f"DELETE FROM traveller_members WHERE member_id={member_id} AND traveller_id={traveller_id}"
 		db.raw_sql(query)
 	
+	@staticmethod
+	def validate_member_name_by_traveller(name: str, traveller_id: int) -> bool:
+		db = Database()
+		query = f"SELECT * FROM members JOIN traveller_members ON members.id = traveller_members.member_id WHERE members.name = '{name}' AND traveller_members.traveller_id = {traveller_id}"
+		result = db.select(query)
+		return len(result) == 0

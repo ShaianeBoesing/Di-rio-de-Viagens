@@ -13,6 +13,7 @@ class MemberEdit(Screen):
 		super().__init__(**kwargs)
 		self.member_id = member_id
 		self.controller = controller
+		self.TEMP_TRAVELLER_ID = 1
 		layout = GridLayout(cols=1, padding=(30, 50, 30, 50), pos_hint={'center_x': 0.5, 'center_y': 0.5})
 		
 		layout.add_widget(Label(text="Editar Membro"))
@@ -44,6 +45,9 @@ class MemberEdit(Screen):
 	def save_member(self, *args):
 		if not self.name_input.text.strip():
 			popup = Popup(title='Erro', content=Label(text='O nome não pode ser deixado em branco.'), size_hint=(None, None), size=(400, 200))
+			popup.open()
+		elif not self.controller.name_is_valid(self.name_input.text.strip(), self.TEMP_TRAVELLER_ID):
+			popup = Popup(title='Erro', content=Label(text='Este nome já existe.'), size_hint=(None, None), size=(400, 200))
 			popup.open()
 		else:
 			self.controller.update_member(

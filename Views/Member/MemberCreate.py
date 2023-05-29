@@ -43,6 +43,9 @@ class MemberCreate(Screen):
 		if not self.name_input.text.strip():
 			popup = Popup(title='Erro', content=Label(text='O nome não pode ser deixado em branco.'), size_hint=(None, None), size=(400, 200))
 			popup.open()
+		elif not self.controller.name_is_valid(self.name_input.text.strip(), self.TEMP_TRAVELLER_ID):
+			popup = Popup(title='Erro', content=Label(text='Este nome já existe.'), size_hint=(None, None), size=(400, 200))
+			popup.open()
 		else:
 			self.controller.create_member(self.name_input.text, self.TEMP_TRAVELLER_ID)
 			self.manager.current = 'member_list'
