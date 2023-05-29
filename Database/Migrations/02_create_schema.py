@@ -16,7 +16,7 @@ cursor.execute("""
 cursor.execute("""
   CREATE TABLE trips (
 	  id INTEGER PRIMARY KEY AUTOINCREMENT,
-	  title TEXT NOT NULL,
+	  title TEXT NOT NULL UNIQUE,
 	  start_date DATE NOT NULL,
 	  end_date DATE NOT NULL,
 	  status TEXT NOT NULL,

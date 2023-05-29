@@ -29,17 +29,26 @@ class Database:
     self.cursor.execute(query, (id,))
     return self.cursor.fetchone()
 
-  def update(self, table_name, id, values):
+  def update(self, table_name, values,id, unique_attribute=None):
     set_values = ', '.join([f"{column} = ?" for column in values.keys()])
-    query = f"UPDATE {table_name} SET {set_values} WHERE id=?"
-    params = list(values.values())
-    params.append(id)
+    if unique_attribute is not None:
+      query = f"UPDATE {table_name} SET {set_values} WHERE {unique_attribute[0]}=?"
+      params = list(values.values())
+      params.append(unique_attribute[1])
+    else:
+      query = f"UPDATE {table_name} SET {set_values} WHERE id=?"
+      params = list(values.values())
+      params.append(id)
     self.cursor.execute(query, params)
     self.connection.commit()
 
-  def delete(self, table_name, id):
-    query = f"DELETE FROM {table_name} WHERE id=?"
-    self.cursor.execute(query, (id,))
+  def delete(self, table_name, id, unique_attribute=None):
+    if unique_attribute is not None:
+      query = f"DELETE FROM {table_name} WHERE {unique_attribute[0]}=?"
+      self.cursor.execute(query, (unique_attribute[1],))
+    else:
+      query = f"DELETE FROM {table_name} WHERE id=?"
+      self.cursor.execute(query, (id,))
     self.connection.commit()
 
   def get_last_id(self):
