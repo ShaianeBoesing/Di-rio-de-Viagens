@@ -7,11 +7,11 @@ class TripController:
         self.__trips = {}  # Lista de viagens
         self.__update_trip_list()
 
-    def create_trip(self, title, cities, start_date: list, end_date: list, status: str = 'Em planejamento'):
+    def create_trip(self, title, start_date: date, end_date: date, status: str = 'Em planejamento'):
         self.__update_trip_list()
 
-        start_date = date(start_date[0], start_date[1], start_date[2])
-        end_date = date(end_date[0], end_date[1], end_date[2])
+        # start_date = date(start_date[0], start_date[1], start_date[2])
+        # end_date = date(end_date[0], end_date[1], end_date[2])
 
         if end_date < start_date:
             return False, 'Viagem não criada,data de termino antes da data de começo da viagem'
@@ -23,10 +23,14 @@ class TripController:
                 return False, 'Viagem não criada por existir outra viagem datas sobrepostas'
 
         trip = Trip(title, start_date, end_date, status)
+        start_date_month = str(start_date.month) if len(str(start_date.month)) == 2 else'0'+str(start_date.month)
+        start_date_day = str(start_date.day) if len(str(start_date.day)) == 2 else'0'+str(start_date.day)
+        end_date_month = str(end_date.month) if len(str(end_date.month)) == 2 else '0' + str(end_date.month)
+        end_date_day = str(end_date.day) if len(str(end_date.day)) == 2 else '0' + str(end_date.day)
         Database().insert('trips', {'title': title,
                                     'start_date': (str(start_date.year) + '-' +
-                                                   str(start_date.month)+'-' + str(start_date.day)),
-                                    'end_date': (str(end_date.year)+'-'+str(end_date.month)+'-'+str(end_date.day)),
+                                                   start_date_month+'-' + start_date_day),
+                                    'end_date': (str(end_date.year)+'-'+end_date_month+'-'+end_date_day),
                                     'status': trip.status, 'traveller_id': '1'})
         # traveller_id a ser implementado com a integração do sistema
         self.__trips[title] = trip
@@ -91,6 +95,7 @@ class TripController:
             trip.status = attributes_to_change['status']
 
             Database().update('trips', attributes_to_change, 1, ['title', title])
+            return True, 'Viagem alterada com sucesso!'
         else:
             return False, 'Viagem nao encontrada!'
 

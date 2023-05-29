@@ -31,10 +31,19 @@ class TripList(Screen):
 
         # Cabeçalho
         header_layout = BoxLayout(size_hint=(1, 0.1))
-        header_label = Label(text="Lista de Categorias", font_size='20sp', halign='center', valign='middle')
+        subheader_layout = GridLayout(size_hint=(1, 0.1), cols=5)
+        header_label = Label(text="Lista de Viagens", font_size='20sp', halign='center', valign='middle')
+        header_label_title = Label(text="Titulo", font_size='20sp', halign='center', valign='middle')
+        header_label_start = Label(text="Inicio", font_size='20sp', halign='center', valign='middle')
+        header_label_end = Label(text="Fim", font_size='20sp', halign='center', valign='middle')
+        header_label_actions = Label(text="Ações", font_size='20sp', halign='center', valign='middle',size_hint_x=None, width= 430)
         header_layout.add_widget(header_label)
+        subheader_layout.add_widget(header_label_title)
+        subheader_layout.add_widget(header_label_start)
+        subheader_layout.add_widget(header_label_end)
+        subheader_layout.add_widget(header_label_actions)
         layout.add_widget(header_layout)
-
+        layout.add_widget(subheader_layout)
         # Tabela
         scrollview = ScrollView()
         table_layout = GridLayout(cols=4, size_hint_y=None, padding=(30, 50, 30, 50))
@@ -81,16 +90,16 @@ class TripList(Screen):
 
         # Adiciona os callbacks aos botões
         back_button.bind(on_release=self.on_back)
-        new_button.bind(on_release=self.on_new_category)
+        new_button.bind(on_release=self.on_new_trip)
 
-    def on_new_category(self, *args):
-        self.manager.current = 'category_create'
-        self.manager.transition = SlideTransition(direction="right")
+    def on_new_trip(self, *args):
+        self.manager.current = 'trip_create'
+        self.manager.transition = SlideTransition(direction="left")
 
-    def on_edit_trip(self, category_id):
-        category_edit_screen = self.manager.get_screen('category_edit')
-        category_edit_screen.category_id = category_id
-        self.manager.current = 'category_edit'
+    def on_edit_trip(self, trip_title):
+        trip_edit_screen = self.manager.get_screen('trip_edit')
+        trip_edit_screen.trip_title = trip_title
+        self.manager.current = 'trip_edit'
         self.manager.transition = SlideTransition(direction="right")
 
     def on_delete_category(self, category_id):

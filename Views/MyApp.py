@@ -11,10 +11,13 @@ from Views.Category.CategoryCreate import CategoryCreate
 from Views.Category.CategoryEdit import CategoryEdit
 from Views.Category.CategoryList import CategoryList
 from Views.Trip.TripList import TripList
+from Views.Trip.TripCreate import TripCreate
+from Views.Trip.TripEdit import TripEdit
 from Controllers.MemberController import MemberController
 from Controllers.UserController import UserController
 from Controllers.CategoryController import CategoryController
 from Controllers.TripController import TripController
+
 
 class WindowManager(ScreenManager):
 	def __init__(self, **kwargs):
@@ -41,6 +44,8 @@ class MyApp(App):
 		sm.add_widget(CategoryList(self.__category_controller, name='category_list'))
 		sm.add_widget(CategoryCreate(self.__category_controller, name='category_create'))
 		sm.add_widget(CategoryEdit(self.__category_controller, name='category_edit'))
-		sm.add_widget(TripList(self.__trip_controller, name='trip_view'))
+		sm.add_widget(TripList(self.__trip_controller, name='trip_list'))
+		sm.add_widget(TripCreate(self.__trip_controller, name='trip_create'))
+		sm.add_widget(TripEdit(self.__trip_controller, name='trip_edit'))
 		return sm
 

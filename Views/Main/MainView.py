@@ -63,7 +63,7 @@ class MainView(Screen):
 
     def go_to_trips(self, instance):
         self.manager.transition.direction = "left"
-        self.manager.current = "trip_view"
+        self.manager.current = "trip_list"
     
     def go_to_login(self, instance):
         self.manager.transition.direction = "right"
