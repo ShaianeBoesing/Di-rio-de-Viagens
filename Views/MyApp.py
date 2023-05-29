@@ -6,13 +6,15 @@ from Views.Member.MemberList import MemberList
 from Views.Main.MainView import MainView
 from Views.Register.RegisterView import RegisterView
 from Views.Login.LoginView import LoginView
-from Controllers.MemberController import MemberController
-from Controllers.UserController import UserController
 from Views.Member.MemberEdit import MemberEdit
-from Controllers.CategoryController import CategoryController
 from Views.Category.CategoryCreate import CategoryCreate
 from Views.Category.CategoryEdit import CategoryEdit
 from Views.Category.CategoryList import CategoryList
+from Views.Trip.TripList import TripList
+from Controllers.MemberController import MemberController
+from Controllers.UserController import UserController
+from Controllers.CategoryController import CategoryController
+from Controllers.TripController import TripController
 
 class WindowManager(ScreenManager):
 	def __init__(self, **kwargs):
@@ -25,7 +27,7 @@ class MyApp(App):
 		self.__user_controller = UserController()
 		self.__member_controller = MemberController()
 		self.__category_controller = CategoryController()
-
+		self.__trip_controller = TripController()
 
 		# Perform any necessary setup tasks here
 	def build(self):
@@ -39,5 +41,6 @@ class MyApp(App):
 		sm.add_widget(CategoryList(self.__category_controller, name='category_list'))
 		sm.add_widget(CategoryCreate(self.__category_controller, name='category_create'))
 		sm.add_widget(CategoryEdit(self.__category_controller, name='category_edit'))
+		sm.add_widget(TripList(self.__trip_controller, name='trip_view'))
 		return sm
 

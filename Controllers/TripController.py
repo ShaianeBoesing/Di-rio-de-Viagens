@@ -40,6 +40,16 @@ class TripController:
         else:
             return 'Viagem nao encontrada!'
 
+    def get_trips(self):
+        self.__update_trip_list()
+        trip_list = []
+        for trip in self.__trips.values():
+            start_date = str(trip.start_date.day)+'/'+str(trip.start_date.month)+'/'+str(trip.start_date.year)
+            end_date = str(trip.end_date.day)+'/'+str(trip.end_date.month)+'/'+str(trip.end_date.year)
+            trip_list.append({'title': trip.title, 'start_date': start_date, 'end_date': end_date,
+                              'status': trip.status})
+        return trip_list
+
     def edit_trip(self, title, attributes_to_change: dict):
         self.__update_trip_list()
         if title in self.__trips.keys():
