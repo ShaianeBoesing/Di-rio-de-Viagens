@@ -68,7 +68,7 @@ class TripList(Screen):
 
             # Botão de actions
             see_button = Button(text="Ver", size_hint=(None, None), size=(200, dp(40)), font_size="16sp")
-            see_button.bind(on_release=lambda _, trip_title=trip['title']: self.on_edit_trip(trip_title))
+            see_button.bind(on_release=lambda _, trip_title=trip['title']: self.show_popup('Ainda nao implementado','Em decisao se vai ou nao ser implementado'))
             edit_button = Button(text="Editar", size_hint=(None, None), size=(200, dp(40)), font_size="16sp")
             edit_button.bind(on_release=lambda _, trip_title=trip['title']: self.on_edit_trip(trip_title))
             actions_layout.add_widget(see_button)
@@ -128,3 +128,13 @@ class TripList(Screen):
     def on_back(self, *args):
         self.manager.transition.direction = "right"
         self.manager.current = "main"
+
+    def show_popup(self, title, text):
+        popup = Popup(title=title, size_hint=(None, None), size=(625, 200))
+        layout = GridLayout(cols=1, spacing=10, padding=10)
+        layout.add_widget(Label(text=text))
+        btn = Button(text="voltar", size_hint=(1, None), height=50)
+        btn.bind(on_press=popup.dismiss)
+        layout.add_widget(btn)
+        popup.add_widget(layout)
+        popup.open()
