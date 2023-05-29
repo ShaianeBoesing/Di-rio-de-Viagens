@@ -83,3 +83,10 @@ class Category:
 		traveller_id = self.get_traveller_id_for_category()
 		query = f"DELETE FROM traveller_categories WHERE category_id={category_id} AND traveller_id={traveller_id}"
 		db.raw_sql(query)
+	
+	@staticmethod
+	def validate_category_name_by_traveller(name: str, traveller_id: int) -> bool:
+		db = Database()
+		query = f"SELECT * FROM categories JOIN traveller_categories ON categories.id = traveller_categories.category_id WHERE categories.name = '{name}' AND traveller_categories.traveller_id = {traveller_id}"
+		result = db.select(query)
+		return len(result) == 0

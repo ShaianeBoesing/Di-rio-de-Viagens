@@ -40,3 +40,7 @@ class CategoryController:
 			categories.append(category)
 		
 		return categories
+
+
+	def name_is_valid(self, name: str, traveller_id: int) -> bool:
+		return Category.validate_category_name_by_traveller(name, traveller_id)
