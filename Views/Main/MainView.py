@@ -43,6 +43,10 @@ class MainView(Screen):
         category_button.bind(on_press=self.go_to_categories)
         button_grid.add_widget(category_button)
 
+        spot_button = Button(text="Spots")
+        spot_button.bind(on_press=self.go_to_spots)
+        button_grid.add_widget(spot_button)
+
         # Add the main layout to the screen
         self.add_widget(layout)
 
@@ -60,8 +64,12 @@ class MainView(Screen):
         # Switch to the "register" screen
         self.manager.transition.direction = "left"
         self.manager.current = "category_list"
-    
+
     def go_to_login(self, instance):
         self.manager.transition.direction = "right"
         self.manager.current = "login_view"
+
+    def go_to_spots(self, instance):
+        self.manager.transition.direction = "right"
+        self.manager.current = "spot_view"
 
