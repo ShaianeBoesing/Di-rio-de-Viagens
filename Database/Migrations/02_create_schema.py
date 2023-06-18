@@ -60,6 +60,7 @@ cursor.execute("""
 		end_hour DATETIME NOT NULL,
 		status TEXT NOT NULL,
 		value REAL NOT NULL,
+        rating INTEGER NOT NULL,
 		trip_id INTEGER NOT NULL,
 		category_id INTEGER NOT NULL,
 		FOREIGN KEY(trip_id) REFERENCES trips(id),
