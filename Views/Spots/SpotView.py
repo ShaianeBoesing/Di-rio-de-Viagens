@@ -24,7 +24,7 @@ class SpotView(Screen):
             self.on_create_spot_option()
         '''
 
-    def on_list_spots(self):
+    def on_list_spots(self, *args):
         spots = self.trip_controller.get_spots()
         self.clear_widgets()
 
@@ -75,6 +75,8 @@ class SpotView(Screen):
 
         # Botao
         buttons_layout = BoxLayout(size_hint=(1, 0.1), padding=10)
+        buttons_layout.add_widget(Label())
+
         return_button = Button(text="Voltar", font_size='18sp')
         return_button.bind(on_press=self.on_return_trip)
         buttons_layout.add_widget(return_button)
@@ -83,15 +85,128 @@ class SpotView(Screen):
         self.add_widget(list_spot_layout)
 
 
-    def on_return_trip(self):
-        pass
+    def on_return_trip(self, *args):
+        self.clear_widgets()
 
     def on_view_spot_option(self, spot):
         self.clear_widgets()
+        view_spot_layout = BoxLayout(orientation='vertical')
+
+        # Título
+        header_label = Label(text=spot.name, text_size=self.size, font_size='30sp', halign='left', valign='middle')
+        view_spot_layout.add_widget(header_label)
+
+        name_box_layout = BoxLayout(orientation='vertical')
+        # Nome do spot label
+        name_label = Label(text="Nome do spot", text_size=self.size, bold=True, font_size='16sp', halign='left', valign='middle')
+        name_box_layout.add_widget(name_label)
+
+        # Nome do spot
+        name = Label(text=spot.name, text_size=self.size, font_size='18sp', halign='left', valign='middle')
+        name_box_layout.add_widget(name)
+        view_spot_layout.add_widget(name_box_layout)
+
+        #dentro desse boxlayout horizontal eu tenho 3 boxlayout verticais
+        '''
+        status_horizontal_box_layout = BoxLayout(size_hint_y=None,
+                                                 size_hint=(None, None),
+                                                     size=(800, dp(50)), minimum_height=dp(40))
+        '''
+        status_horizontal_box_layout = BoxLayout(size_hint_y=None,
+                                                 size_hint=(1.0,1.0))
+        status_horizontal_box_layout.cols = 3
+        status_horizontal_box_layout.col_default_width = 200
+
+        #status_horizontal_box_layout.add_widget(Label())
+
+        start_hour_vertical_box_layout = BoxLayout(orientation='vertical', )
+        start_hour_label = Label(text="Hora de início", text_size=self.size,
+                                 size=(100, dp(40)), bold=True,
+                                 font_size='16sp', halign='center',
+                                 valign='middle')
+        start_hour = Label(text=spot.start_hour, text_size=self.size,
+                           size=(100, dp(40)),
+                           font_size='18sp', halign='center', valign='middle')
+        start_hour_vertical_box_layout.add_widget(start_hour_label)
+        start_hour_vertical_box_layout.add_widget(start_hour)
+
+        end_hour_vertical_box_layout = BoxLayout(orientation='vertical')
+        end_hour_label = Label(text="Hora de fim", text_size=self.size,
+                               size=(100, dp(40)), bold=True,
+                               font_size='16sp', halign='center', valign='middle')
+        end_hour = Label(text=spot.end_hour, text_size=self.size,
+                         size=(100, dp(40)),
+                         font_size='18sp', halign='center', valign='middle')
+        end_hour_vertical_box_layout.add_widget(end_hour_label)
+        end_hour_vertical_box_layout.add_widget(end_hour)
+
+        spot_status_vertical_box_layout = BoxLayout(orientation='vertical')
+        spot_status_label = Label(text="Status", text_size=self.size,
+                                  size=(100, dp(40)), bold=True,
+                                  font_size='16sp', halign='center', valign='middle')
+        spot_status = Label(text=spot.status, text_size=self.size,
+                            size=(100, dp(40)),
+                            font_size='18sp', halign='center', valign='middle')
+        spot_status_vertical_box_layout.add_widget(spot_status_label)
+        spot_status_vertical_box_layout.add_widget(spot_status)
+
+        status_horizontal_box_layout.add_widget(start_hour_vertical_box_layout)
+        status_horizontal_box_layout.add_widget(end_hour_vertical_box_layout)
+        status_horizontal_box_layout.add_widget(spot_status_vertical_box_layout)
+
+        view_spot_layout.add_widget(status_horizontal_box_layout)
+
+        categoria_box_layout = BoxLayout(orientation='vertical')
+        #categoria_label
+        categoria_label = Label(text="Categoria", text_size=self.size, bold=True, font_size='16sp', halign='left', valign='middle')
+        categoria_box_layout.add_widget(categoria_label)
+
+        #categoria
+        categoria = Label(text=spot.category.name, text_size=self.size, font_size='18sp', halign='left', valign='middle')
+        categoria_box_layout.add_widget(categoria)
+        view_spot_layout.add_widget(categoria_box_layout)
+
+        members_string = ""
+        for member in spot.members:
+            members_string += member.name + ", "
+        members_string = members_string[:-2]
+
+        membros_box_layout = BoxLayout(orientation='vertical')
+        #membros_label
+        membros_label = Label(text="Membros", text_size=self.size, bold=True, font_size='16sp', halign='left', valign='middle')
+        membros_box_layout.add_widget(membros_label)
+
+        #membros
+        membros = Label(text=members_string, text_size=self.size, font_size='18sp', halign='left', valign='middle')
+        membros_box_layout.add_widget(membros)
+        view_spot_layout.add_widget(membros_box_layout)
+
+        #valor_gasto
+        valor_box_layout = BoxLayout(orientation='vertical')
+        #valor_label
+        valor_label = Label(text="Valor", text_size=self.size, bold=True, font_size='16sp', halign='left', valign='middle')
+        valor_box_layout.add_widget(valor_label)
+
+        #valor
+        valor = Label(text=str(spot.money_spent), text_size=self.size, font_size='18sp', halign='left', valign='middle')
+        valor_box_layout.add_widget(valor)
+        view_spot_layout.add_widget(valor_box_layout)
+
+        #Botao
+        button_box_layout = BoxLayout(size_hint=(1.0,0.5), padding=10)
+        button_box_layout.add_widget(Label())
+
+        return_button = Button(text="Voltar", font_size='18sp')
+        return_button.bind(on_press=self.on_list_spots)
+        button_box_layout.add_widget(return_button)
+
+        view_spot_layout.add_widget(button_box_layout)
+
+        self.add_widget(view_spot_layout)
 
     def on_update_spot_option(self, spot):
-        pass
+        self.clear_widgets()
 
     def on_delete_spot_option(self, spot):
-        pass
+        self.clear_widgets()
 
