@@ -26,11 +26,11 @@ class LoginView(Screen):
 
         # Add the "Nome de Usuário" label and text input to the input grid
         input_grid.add_widget(Label(text="Nome de Usuário: *"))
-        self.username_input = TextInput()
+        self.username_input = TextInput(multiline=False)
         input_grid.add_widget(self.username_input)
 
         input_grid.add_widget(Label(text="Senha: *"))
-        self.password_input = TextInput(password=True)
+        self.password_input = TextInput(multiline=False, password=True)
         input_grid.add_widget(self.password_input)
 
         # Create a GridLayout to hold the buttons

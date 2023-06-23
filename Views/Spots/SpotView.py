@@ -10,6 +10,7 @@ from kivy.uix.popup import Popup
 from kivy.uix.boxlayout import BoxLayout
 from kivy.metrics import dp
 from kivy.uix.scrollview import ScrollView
+#from Model.Category import Category
 
 class SpotView(Screen):
     def __init__(self, trip_controller: TripController, **kwargs):
@@ -25,6 +26,7 @@ class SpotView(Screen):
         '''
 
     def on_list_spots(self, *args):
+        #TODO na integração possivelmente bastará pegar o atributo spots da trip
         spots = self.trip_controller.get_spots()
         self.clear_widgets()
 

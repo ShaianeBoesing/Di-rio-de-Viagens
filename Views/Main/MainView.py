@@ -47,6 +47,10 @@ class MainView(Screen):
         spot_button.bind(on_press=self.go_to_spots)
         button_grid.add_widget(spot_button)
 
+        spot_create_button = Button(text="Criar Spots")
+        spot_create_button.bind(on_press=self.go_to_create_spot)
+        button_grid.add_widget(spot_create_button)
+
         # Add the main layout to the screen
         self.add_widget(layout)
 
@@ -72,4 +76,8 @@ class MainView(Screen):
     def go_to_spots(self, instance):
         self.manager.transition.direction = "right"
         self.manager.current = "spot_view"
+
+    def go_to_create_spot(self, instance):
+        self.manager.transition.direction = "right"
+        self.manager.current = "spot_create"
 

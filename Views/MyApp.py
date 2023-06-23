@@ -15,6 +15,7 @@ from Views.Category.CategoryCreate import CategoryCreate
 from Views.Category.CategoryEdit import CategoryEdit
 from Views.Category.CategoryList import CategoryList
 from Views.Spots.SpotView import SpotView
+from Views.Spots.SpotCreate import SpotCreate
 
 class WindowManager(ScreenManager):
 	def __init__(self, **kwargs):
@@ -43,5 +44,6 @@ class MyApp(App):
         sm.add_widget(CategoryCreate(self.__category_controller, name='category_create'))
         sm.add_widget(CategoryEdit(self.__category_controller, name='category_edit'))
         sm.add_widget(SpotView(self.__trip_controller, name='spot_view'))
+        sm.add_widget(SpotCreate(self.__trip_controller, name='spot_create'))
         return sm
 

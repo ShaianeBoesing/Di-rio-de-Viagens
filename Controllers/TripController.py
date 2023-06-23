@@ -8,6 +8,8 @@ class TripController:
     def __init__(self):
         pass
 
+    #TODO na integração essa função provavelmente será usado pra preencher os
+    #spots da trip
     def get_spots(self):
         #select no DB
         database = Database()
