@@ -12,9 +12,10 @@ from kivy.uix.popup import Popup
 #show_popup e on_return ficam identicos, porem nao fazemos herança dupla
 
 class LoginView(Screen):
-    def __init__(self, controller:UserController, **kwargs):
+    def __init__(self, controller: UserController, my_app_instance, **kwargs):
         super().__init__(**kwargs)
         self.user_contoller = controller
+        self.my_app_instance = my_app_instance
 
         layout = GridLayout(cols=1, padding=(30, 50, 30, 50), pos_hint={'center_x': 0.5, 'center_y': 0.5})
 
@@ -55,7 +56,7 @@ class LoginView(Screen):
         username = self.username_input.text
         password = self.password_input.text
 
-        user_validation, message = self.user_contoller.login(username, password)
+        user_validation, traveller_id, message = self.user_contoller.login(username, password)
         if user_validation:
             self.show_popup('Entrou', message, 'Confirmar')
             self.username_input.text = ''
@@ -63,7 +64,8 @@ class LoginView(Screen):
 
             #TODO Aqui vai futuramente transicionar a futura tela do sistema já logado
             self.manager.transition.direction = "left"
-            self.manager.current = "main"
+            self.my_app_instance.traveller_id = traveller_id
+            self.manager.current = "trip_list"
         else:
             self.show_popup("Erro ao entrar!", message)
             self.password_input.text = ''

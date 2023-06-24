@@ -16,6 +16,9 @@ from Views.Category.CategoryEdit import CategoryEdit
 from Views.Category.CategoryList import CategoryList
 from Views.Spots.SpotView import SpotView
 from Views.Spots.SpotCreate import SpotCreate
+from Views.Trip.TripList import TripList
+from Views.Trip.TripCreate import TripCreate
+from Views.Trip.TripEdit import TripEdit
 
 class WindowManager(ScreenManager):
 	def __init__(self, **kwargs):
@@ -30,20 +33,30 @@ class MyApp(App):
         self.__category_controller = CategoryController()
         self.__trip_controller = TripController()
 
+        self.traveller_id = None
+
 
 		# Perform any necessary setup tasks here
     def build(self):
         sm = ScreenManager()
         sm.add_widget(MainView(name='main_view'))
+
         sm.add_widget(RegisterView(self.__user_controller, name='register_view'))
-        sm.add_widget(LoginView(self.__user_controller, name='login_view'))
+        sm.add_widget(LoginView(self.__user_controller, self, name='login_view'))
+
         sm.add_widget(MemberList(self.__member_controller, name='member_list'))
         sm.add_widget(MemberCreate(self.__member_controller, name='member_create'))
         sm.add_widget(MemberEdit(self.__member_controller, name='member_edit'))
+
         sm.add_widget(CategoryList(self.__category_controller, name='category_list'))
         sm.add_widget(CategoryCreate(self.__category_controller, name='category_create'))
         sm.add_widget(CategoryEdit(self.__category_controller, name='category_edit'))
+
         sm.add_widget(SpotView(self.__trip_controller, name='spot_view'))
         sm.add_widget(SpotCreate(self.__trip_controller, name='spot_create'))
+
+        sm.add_widget(TripList(self.__trip_controller, self, name='trip_list'))
+        sm.add_widget(TripCreate(self.__trip_controller, self, name='trip_create'))
+        sm.add_widget(TripEdit(self.__trip_controller, self, name='trip_edit'))
         return sm
 

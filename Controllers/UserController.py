@@ -7,6 +7,7 @@ class UserController:
     def __init__(self):
         self.conn = sqlite3.connect('Database/Migrations/diary.db')
         self.create_user_table()
+        self.__logged_user = None
 
     def create_user_table(self):
         cursor = self.conn.cursor()
@@ -59,7 +60,8 @@ class UserController:
             return False, 'Usuário não encontrado'
 
         if stored_user.password == self.md5_to_hash_password(password):
-            return True, f'Entrou como {username}'
+            self.__logged_user = stored_user
+            return True, stored_user.traveller_id, f'Entrou como {username}'
         else:
             return False, 'Senha incorreta!'
 
@@ -70,7 +72,8 @@ class UserController:
         result = cursor.fetchone()
         if result is None:
             return None
-        return User(result[1], result[2], result[3])
+        print(result[1], result[2], result[3], result[0])
+        return User(result[1], result[2], result[3], result[0])
 
     def md5_to_hash_password(self, password: str):
         hashed_password = hashlib.md5(password.encode())

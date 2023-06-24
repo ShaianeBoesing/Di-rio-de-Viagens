@@ -34,22 +34,22 @@ class MainView(Screen):
         button_grid.add_widget(register_button)
 
         # Add the Member button to the button grid
-        member_button = Button(text="Membros")
-        member_button.bind(on_press=self.go_to_members)
-        button_grid.add_widget(member_button)
-
-        # Add the Member button to the button grid
-        category_button = Button(text="Categorias")
-        category_button.bind(on_press=self.go_to_categories)
-        button_grid.add_widget(category_button)
-
-        spot_button = Button(text="Spots")
-        spot_button.bind(on_press=self.go_to_spots)
-        button_grid.add_widget(spot_button)
-
-        spot_create_button = Button(text="Criar Spots")
-        spot_create_button.bind(on_press=self.go_to_create_spot)
-        button_grid.add_widget(spot_create_button)
+        # member_button = Button(text="Membros")
+        # member_button.bind(on_press=self.go_to_members)
+        # button_grid.add_widget(member_button)
+        #
+        # # Add the Member button to the button grid
+        # category_button = Button(text="Categorias")
+        # category_button.bind(on_press=self.go_to_categories)
+        # button_grid.add_widget(category_button)
+        #
+        # spot_button = Button(text="Spots")
+        # spot_button.bind(on_press=self.go_to_spots)
+        # button_grid.add_widget(spot_button)
+        #
+        # spot_create_button = Button(text="Criar Spots")
+        # spot_create_button.bind(on_press=self.go_to_create_spot)
+        # button_grid.add_widget(spot_create_button)
 
         # Add the main layout to the screen
         self.add_widget(layout)
