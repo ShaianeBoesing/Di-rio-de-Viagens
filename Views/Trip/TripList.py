@@ -19,12 +19,12 @@ class TripList(Screen):
     def on_pre_enter(self, *args):
         self.load()
 
-    def load_categories(self):
+    def load_trips(self):
         self.trips = self.controller.get_trips(self.my_app_instance.traveller_id)
 
     def load(self):
         self.clear_widgets()  # Limpa todos os widgets da tela para não se sobrepor
-        self.load_categories()  # Carrega o self.categories
+        self.load_trips()  # Carrega o self.categories
 
         # Layout principal
         layout = BoxLayout(orientation='vertical')
@@ -81,9 +81,11 @@ class TripList(Screen):
         buttons_layout = BoxLayout(size_hint=(1, 0.1), padding=10)
         member_button = Button(text="Ver membros", font_size='18sp')
         new_button = Button(text="Criar Viagem", font_size='18sp')
+        category_button = Button(text="Ver categorias", font_size='18sp')
         logout_button = Button(text="Sair", font_size='18sp', size_hint_x=0.2)
 
         buttons_layout.add_widget(member_button)
+        buttons_layout.add_widget(category_button)
         buttons_layout.add_widget(new_button)
         layout.add_widget(buttons_layout)
         header_layout.add_widget(logout_button)
@@ -94,7 +96,7 @@ class TripList(Screen):
         member_button.bind(on_release=self.on_member)
         new_button.bind(on_release=self.on_new_trip)
         logout_button.bind(on_release=self.on_logout)
-
+        category_button.bind(on_release=self.on_category)
 
     def on_new_trip(self, *args):
         self.manager.current = 'trip_create'
@@ -106,28 +108,9 @@ class TripList(Screen):
         self.manager.current = 'trip_edit'
         self.manager.transition = SlideTransition(direction="right")
 
-    def on_delete_category(self, category_id):
-        self.confirm_delete_category(category_id)
-
-    def delete_category(self, category_id, popup):
-        self.controller.delete_category(category_id)
-        popup.dismiss()
-        self.load()
-
-    def confirm_delete_category(self, category_id):
-        content = BoxLayout(orientation='vertical', padding=10, spacing=10)
-        message = Label(text='Deseja realmente excluir o Categoria selecionada?')
-        content.add_widget(message)
-        buttons_layout = BoxLayout(size_hint_y=None, height=dp(40), spacing=10)
-        confirm_button = Button(text='Confirmar', size_hint_x=None, width=dp(100))
-        cancel_button = Button(text='Cancelar', size_hint_x=None, width=dp(100))
-        buttons_layout.add_widget(confirm_button)
-        buttons_layout.add_widget(cancel_button)
-        content.add_widget(buttons_layout)
-        popup = Popup(title='Excluir Categoria', content=content, size_hint=(0.5, 0.5))
-        confirm_button.bind(on_release=lambda _: self.delete_category(category_id, popup))
-        cancel_button.bind(on_release=popup.dismiss)
-        popup.open()
+    def on_category(self, *args):
+        self.manager.transition = SlideTransition(direction="up")
+        self.manager.current = 'category_list'
 
     def on_member(self, *args):
         self.manager.transition.direction = "right"

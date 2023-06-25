@@ -13,13 +13,13 @@ class CategoryList(Screen):
 		super().__init__(**kwargs)
 		self.categories = []
 		self.controller = controller
-		self.TEMP_TRAVELLER_ID = my_app_instance.traveller_id
+		self.TEMP_TRAVELLER_ID = my_app_instance
 
 	def on_pre_enter(self, *args):
 		self.load()
 	
 	def load_categories(self):
-		self.categories = self.controller.list_categories_by_traveller(self.TEMP_TRAVELLER_ID)
+		self.categories = self.controller.list_categories_by_traveller(self.TEMP_TRAVELLER_ID.traveller_id)
 	
 	def load(self):
 		self.clear_widgets() # Limpa todos os widgets da tela para não se sobrepor
@@ -111,5 +111,5 @@ class CategoryList(Screen):
 		popup.open()
 	
 	def on_back(self, *args):
-		self.manager.transition.direction = "right"
-		self.manager.current = "main"
+		self.manager.transition.direction = "down"
+		self.manager.current = "trip_list"
