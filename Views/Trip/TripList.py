@@ -49,30 +49,34 @@ class TripList(Screen):
         table_layout = GridLayout(cols=4, size_hint_y=None, padding=(30, 50, 30, 50))
         table_layout.bind(minimum_height=table_layout.setter('height'))
 
-        for trip in self.trips:
-            title_label = Label(text=trip['title'], font_size='16sp', halign='center', valign='middle')
-            start_date_label = Label(text=trip['start_date'], font_size='16sp', halign='center', valign='middle')
-            end_date_label = Label(text=trip['end_date'], font_size='16sp', halign='center', valign='middle')
+        if len(self.trips) > 0:
+            for trip in self.trips:
+                title_label = Label(text=trip['title'], font_size='16sp', halign='center', valign='middle')
+                start_date_label = Label(text=trip['start_date'], font_size='16sp', halign='center', valign='middle')
+                end_date_label = Label(text=trip['end_date'], font_size='16sp', halign='center', valign='middle')
 
-            # Layout para actions
-            actions_layout = BoxLayout(size_hint_y=None, padding=10, size_hint=(None, None), size=(400, dp(40)),
-                                       minimum_height=dp(40))
-            actions_layout.cols = 2  # definir duas colunas
-            actions_layout.col_default_width = 200  # definir largura da coluna como 200 pixels
+                # Layout para actions
+                actions_layout = BoxLayout(size_hint_y=None, padding=10, size_hint=(None, None), size=(400, dp(40)),
+                                           minimum_height=dp(40))
+                actions_layout.cols = 2  # definir duas colunas
+                actions_layout.col_default_width = 200  # definir largura da coluna como 200 pixels
 
-            # Adiciona o nome à coluna 1 e actions_layout à coluna 2 do table_layout
+                # Adiciona o nome à coluna 1 e actions_layout à coluna 2 do table_layout
+                table_layout.add_widget(title_label)
+                table_layout.add_widget(start_date_label)
+                table_layout.add_widget(end_date_label)
+                table_layout.add_widget(actions_layout)
+
+                # Botão de actions
+                see_button = Button(text="Ver", size_hint=(None, None), size=(200, dp(40)), font_size="16sp")
+                see_button.bind(on_release=lambda _, trip_title=trip['title']: self.show_popup('Ainda nao implementado','Em decisao se vai ou nao ser implementado'))
+                edit_button = Button(text="Editar", size_hint=(None, None), size=(200, dp(40)), font_size="16sp")
+                edit_button.bind(on_release=lambda _, trip_title=trip['title']: self.on_edit_trip(trip_title))
+                actions_layout.add_widget(see_button)
+                actions_layout.add_widget(edit_button)
+        else:
+            title_label = Label(text='Não há viagens criadas, crie uma viagem para vê-la aqui!', font_size='20sp', halign='center', valign='middle')
             table_layout.add_widget(title_label)
-            table_layout.add_widget(start_date_label)
-            table_layout.add_widget(end_date_label)
-            table_layout.add_widget(actions_layout)
-
-            # Botão de actions
-            see_button = Button(text="Ver", size_hint=(None, None), size=(200, dp(40)), font_size="16sp")
-            see_button.bind(on_release=lambda _, trip_title=trip['title']: self.show_popup('Ainda nao implementado','Em decisao se vai ou nao ser implementado'))
-            edit_button = Button(text="Editar", size_hint=(None, None), size=(200, dp(40)), font_size="16sp")
-            edit_button.bind(on_release=lambda _, trip_title=trip['title']: self.on_edit_trip(trip_title))
-            actions_layout.add_widget(see_button)
-            actions_layout.add_widget(edit_button)
 
         scrollview.add_widget(table_layout)
         layout.add_widget(scrollview)
