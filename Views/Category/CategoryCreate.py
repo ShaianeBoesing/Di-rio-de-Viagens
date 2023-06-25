@@ -48,6 +48,6 @@ class CategoryCreate(Screen):
 			self.manager.current = 'category_list'
 	
 	def on_return(self, *args):
+		self.manager.transition = SlideTransition(direction="right")
 		self.manager.current = 'category_list'
-		self.manager.transition = SlideTransition(direction="left")
 

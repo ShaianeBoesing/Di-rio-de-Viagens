@@ -78,9 +78,9 @@ class CategoryList(Screen):
 		new_button.bind(on_release=self.on_new_category)
 	
 	def on_new_category(self, *args):
+		self.manager.transition = SlideTransition(direction="left")
 		self.manager.current = 'category_create'
-		self.manager.transition = SlideTransition(direction="right")
-	
+
 	def on_edit_category(self, category_id):
 		category_edit_screen = self.manager.get_screen('category_edit')
 		category_edit_screen.category_id = category_id
