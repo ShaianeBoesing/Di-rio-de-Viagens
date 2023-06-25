@@ -1,16 +1,18 @@
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager
 from kivy.lang.builder import Builder
-from Views.Member.MemberCreate import MemberCreate
-from Views.Member.MemberList import MemberList
+from Controllers.MemberController import MemberController
+from Controllers.UserController import UserController
+from Controllers.CategoryController import CategoryController
+from Controllers.TripController import TripController
+from Controllers.CommentController import CommentController
+
 from Views.Main.MainView import MainView
 from Views.Register.RegisterView import RegisterView
 from Views.Login.LoginView import LoginView
-from Controllers.MemberController import MemberController
-from Controllers.UserController import UserController
+from Views.Member.MemberList import MemberList
+from Views.Member.MemberCreate import MemberCreate
 from Views.Member.MemberEdit import MemberEdit
-from Controllers.CategoryController import CategoryController
-from Controllers.TripController import TripController
 from Views.Category.CategoryCreate import CategoryCreate
 from Views.Category.CategoryEdit import CategoryEdit
 from Views.Category.CategoryList import CategoryList
@@ -19,6 +21,9 @@ from Views.Spots.SpotCreate import SpotCreate
 from Views.Trip.TripList import TripList
 from Views.Trip.TripCreate import TripCreate
 from Views.Trip.TripEdit import TripEdit
+from Views.Comment.CommentList import CommentList
+from Views.Comment.CommentCreate import CommentCreate
+from Views.Comment.CommentEdit import CommentEdit
 
 class WindowManager(ScreenManager):
 	def __init__(self, **kwargs):
@@ -32,6 +37,7 @@ class MyApp(App):
         self.__member_controller = MemberController()
         self.__category_controller = CategoryController()
         self.__trip_controller = TripController()
+        self.__comment_controller = CommentController()
 
         self.traveller_id = None
 
@@ -58,5 +64,9 @@ class MyApp(App):
         sm.add_widget(TripList(self.__trip_controller, self, name='trip_list'))
         sm.add_widget(TripCreate(self.__trip_controller, self, name='trip_create'))
         sm.add_widget(TripEdit(self.__trip_controller, self, name='trip_edit'))
+
+        sm.add_widget(CommentList(self.__comment_controller, self, name='comment_list'))
+        sm.add_widget(CommentCreate(self.__comment_controller, self, name='comment_create'))
+        sm.add_widget(CommentEdit(self.__comment_controller, self, name='comment_edit'))
         return sm
 

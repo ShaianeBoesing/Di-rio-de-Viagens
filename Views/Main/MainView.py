@@ -34,9 +34,9 @@ class MainView(Screen):
         button_grid.add_widget(register_button)
 
         # Add the Member button to the button grid
-        # member_button = Button(text="Membros")
-        # member_button.bind(on_press=self.go_to_members)
-        # button_grid.add_widget(member_button)
+        comment_button = Button(text="Comentários")
+        comment_button.bind(on_press=self.go_to_comments)
+        button_grid.add_widget(comment_button)
         #
         # # Add the Member button to the button grid
         # category_button = Button(text="Categorias")
@@ -80,4 +80,8 @@ class MainView(Screen):
     def go_to_create_spot(self, instance):
         self.manager.transition.direction = "right"
         self.manager.current = "spot_create"
+
+    def go_to_comments(self, instance):
+        self.manager.transition.direction = "right"
+        self.manager.current = "comment_list"
 
