@@ -107,7 +107,7 @@ class TripEdit(Screen):
             self.show_popup("Erro ao criar viagem!", 'Erro inesperado com as datas! ')
             return
         # Create a Popup with the Label as the content
-        user_validation, message = self.trip_controller.edit_trip(self.trip_title, {'title':title,'start_date':start_date,'end_date':end_date,'status':status})
+        user_validation, message = self.trip_controller.edit_trip(self.trip_title, {'title':title,'start_date':start_date,'end_date':end_date,'status':status}, self.my_app_instance.traveller_id)
         if user_validation:
             self.show_popup('Sucesso ao criar viajante!', message)
             self.title_input.text = ''
@@ -134,7 +134,7 @@ class TripEdit(Screen):
         self.confirm_delete_trip(self.trip_title)
 
     def delete_member(self, trip_title, popup):
-        self.trip_controller.delete_trip(trip_title)
+        self.trip_controller.delete_trip(trip_title, self.my_app_instance.traveller_id)
         popup.dismiss()
         self.on_return(self)
 

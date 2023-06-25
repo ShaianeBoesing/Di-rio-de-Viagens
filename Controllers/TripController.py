@@ -57,10 +57,12 @@ class TripController:
                               'status': trip.status})
         return trip_list
 
-    def edit_trip(self, title, attributes_to_change: dict):
-        self.__update_trip_list()
+    def edit_trip(self, title, attributes_to_change: dict, traveller_id):
+        self.__update_trip_list(traveller_id)
         if title in self.__trips.keys():
             trip = self.__trips[title]
+            query = f'SELECT ID FROM TRIPS WHERE title = "{title}" and traveller_id = "{traveller_id}" '
+            id = Database().select(query)[0][0]
 
             if attributes_to_change['title'] != trip.title:
                 for loop_trip in self.__trips.values():
@@ -97,20 +99,21 @@ class TripController:
             trip.end_date = attributes_to_change['end_date']
             trip.status = attributes_to_change['status']
 
-            Database().update('trips', attributes_to_change, 1, ['title', title])
+            Database().update('trips', id,attributes_to_change)
             return True, 'Viagem alterada com sucesso!'
         else:
             return False, 'Viagem nao encontrada!'
 
-    def delete_trip(self, title):
-        self.__update_trip_list()
+    def delete_trip(self, title, traveller_id,):
+        self.__update_trip_list(traveller_id)
         if title in self.__trips.keys():
+            query = f'SELECT ID FROM TRIPS WHERE title = "{title}" and traveller_id = "{traveller_id}" '
+            id = Database().select(query)[0][0]
+            Database().delete('trips', id)
             del self.__trips[title]
-            Database().delete('trips', 1, ['title', title])
 
     def __update_trip_list(self, traveller_id):
         table = Database().select(f'SELECT * FROM TRIPS WHERE traveller_id = {traveller_id}')
-        print(table)
         self.__trips = {}
         if table is not None:
             for tpl_trip in table:
