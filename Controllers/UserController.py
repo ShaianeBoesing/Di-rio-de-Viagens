@@ -25,7 +25,6 @@ class UserController:
         cursor.execute('SELECT * FROM travellers WHERE username=?', (username,))
         result = cursor.fetchone()
         if result is not None:
-            print('deu nao')
             return False, 'Nome de usuário já existente!'
 
         # Create a new user and add it to the database
@@ -43,7 +42,6 @@ class UserController:
         cursor.execute('INSERT INTO travellers (username, name, password) VALUES (?, ?, ?)',
                        (username, name, hashlib.md5(password.encode()).hexdigest()))
         self.conn.commit()
-        print('Criado')
         return True, 'Viajante criado com sucesso!'
 
     def login(self, username: str, password: str):
@@ -72,7 +70,6 @@ class UserController:
         result = cursor.fetchone()
         if result is None:
             return None
-        print(result[1], result[2], result[3], result[0])
         return User(result[1], result[2], result[3], result[0])
 
     def md5_to_hash_password(self, password: str):

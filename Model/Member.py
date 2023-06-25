@@ -37,7 +37,6 @@ class Member:
 	@staticmethod
 	def list_by_traveller(traveller_id):
 		db = Database()
-		print(f"SELECT members.* FROM traveller_members JOIN members ON traveller_members.member_id = members.id WHERE traveller_members.traveller_id={traveller_id}")
 		results = db.select(f"SELECT members.* FROM traveller_members JOIN members ON traveller_members.member_id = members.id WHERE traveller_members.traveller_id={traveller_id}")
 		members = []
 		for result in results:
