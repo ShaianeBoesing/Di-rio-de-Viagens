@@ -74,10 +74,10 @@ class TripCreate(Screen):
             self.show_popup("Erro ao criar viagem!", 'Titulo vazio!')
             return
         if (len(start_date)!=10) or (len(start_date.split('/')[2]) != 4 or len(start_date.split('/')[1]) != 2 or len(start_date.split('/')[0]) != 2):
-            self.show_popup("Erro ao criar viagem!", 'Data de inicio no formato errado, formato esperado: DD/MM/AAAA')
+            self.show_popup("Erro ao criar viagem!", 'Alguma data no formato errado, formato esperado: DD/MM/AAAA')
             return
         if (len(end_date)!=10) or (len(end_date.split('/')[2]) != 4 or len(end_date.split('/')[1]) != 2 or len(end_date.split('/')[0]) != 2):
-            self.show_popup("Erro ao criar viagem!", 'Data de fim no formato errado, formato esperado: DD/MM/AAAA')
+            self.show_popup("Erro ao criar viagem!", 'Alguma data no formato errado, formato esperado: DD/MM/AAAA')
             return
         try:
             start_date = date(int(start_date.split('/')[2]), int(start_date.split('/')[1]), int(start_date.split('/')[0]))
