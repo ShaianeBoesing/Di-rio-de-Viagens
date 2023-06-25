@@ -10,24 +10,30 @@ from kivy.uix.popup import Popup
 from kivy.uix.boxlayout import BoxLayout
 from kivy.metrics import dp
 from kivy.uix.scrollview import ScrollView
-#from Model.Category import Category
+from kivy.uix.dropdown import DropDown
+from kivy.uix.checkbox import CheckBox
+from Model.Category import Category
+from Model.Member import Member
+from datetime import datetime
 
 class SpotView(Screen):
-    def __init__(self, trip_controller: TripController, **kwargs):
+    def __init__(self, trip_controller: TripController, my_app_instance, **kwargs):
         super().__init__(**kwargs)
         self.trip_controller = trip_controller
         self.layout = None
+        self.my_app_instance = my_app_instance
+        #self.on_pre_enter()
+
+    def on_pre_enter(self):
+        self.clear_widgets()
+        self.load_spots()
         self.on_list_spots()
-        '''
-        if first_screen_option == 'list_spots_screen':
-            self.on_list_spots()
-        elif first_screen_option == 'create_spot_option':
-            self.on_create_spot_option()
-        '''
+
+    def load_spots(self):
+        self.trip_controller.spots = self.trip_controller.get_spots(self.my_app_instance.traveller_id)
 
     def on_list_spots(self, *args):
-        #TODO na integração possivelmente bastará pegar o atributo spots da trip
-        spots = self.trip_controller.get_spots()
+        spots = self.trip_controller.spots
         self.clear_widgets()
 
         list_spot_layout = BoxLayout(orientation='vertical')
@@ -87,8 +93,10 @@ class SpotView(Screen):
         self.add_widget(list_spot_layout)
 
 
+    #TODO transicionar para a tela de trip no futuro
     def on_return_trip(self, *args):
-        self.clear_widgets()
+        self.manager.transition.direction = "left"
+        self.manager.current = "main"
 
     def on_view_spot_option(self, spot):
         self.clear_widgets()
@@ -109,11 +117,6 @@ class SpotView(Screen):
         view_spot_layout.add_widget(name_box_layout)
 
         #dentro desse boxlayout horizontal eu tenho 3 boxlayout verticais
-        '''
-        status_horizontal_box_layout = BoxLayout(size_hint_y=None,
-                                                 size_hint=(None, None),
-                                                     size=(800, dp(50)), minimum_height=dp(40))
-        '''
         status_horizontal_box_layout = BoxLayout(size_hint_y=None,
                                                  size_hint=(1.0,1.0))
         status_horizontal_box_layout.cols = 3
@@ -208,7 +211,344 @@ class SpotView(Screen):
 
     def on_update_spot_option(self, spot):
         self.clear_widgets()
+        update_spot_layout = BoxLayout(orientation='vertical')
+
+        #Título
+        header_label = Label(text="Edição de spot", text_size=[800,600], font_size='30sp', halign='left', valign='middle')
+        update_spot_layout.add_widget(header_label)
+
+        #Nome
+        name_box_layout = BoxLayout(orientation='vertical')
+        name_label = Label(text="Nome do spot *", text_size=[800,600], font_size='16sp', halign='left', valign='middle')
+        name_box_layout.add_widget(name_label)
+
+        #truque para deixar input box menor
+        spot_name_input_box = BoxLayout(orientation='vertical')
+        spot_name_input = TextInput(text=spot.name,multiline=False)
+        spot_name_input_box.add_widget(spot_name_input)
+        spot_name_input_box.add_widget(Label())
+
+        name_box_layout.add_widget(spot_name_input_box)
+
+        update_spot_layout.add_widget(name_box_layout)
+
+        #Data e Hora
+        horizontal_box_layout = BoxLayout()
+        horizontal_box_layout.cols = 4
+
+        start_hour_vertical_box_layout = BoxLayout(orientation='vertical')
+        start_hour_label = Label(text="Hora de início *", font_size='16sp',
+                                 halign='center', valign='middle')
+
+        start_hour_input = TextInput(text=spot.start_hour, multiline=False)
+
+        start_hour_vertical_box_layout.add_widget(start_hour_label)
+        start_hour_vertical_box_layout.add_widget(start_hour_input)
+
+        end_hour_vertical_box_layout = BoxLayout(orientation='vertical')
+        end_hour_label = Label(text="Hora de fim *", font_size='16sp',
+                                 halign='center', valign='middle')
+
+        end_hour_input = TextInput(text=spot.end_hour, multiline=False)
+
+        end_hour_vertical_box_layout.add_widget(end_hour_label)
+        end_hour_vertical_box_layout.add_widget(end_hour_input)
+
+        horizontal_box_layout.add_widget(start_hour_vertical_box_layout)
+        horizontal_box_layout.add_widget(end_hour_vertical_box_layout)
+        horizontal_box_layout.add_widget(Label())
+        horizontal_box_layout.add_widget(Label())
+
+        update_spot_layout.add_widget(horizontal_box_layout)
+
+        #categoria_valor
+        cv_horizontal_box_layout = BoxLayout()
+        cv_horizontal_box_layout.cols = 4
+
+        category_vertical_box_layout = BoxLayout(orientation='vertical')
+        category_label = Label(text="Categoria *", font_size='16sp',
+                                 halign='center', valign='middle')
+        #TODO Na integração acessar traveller logado e pegar seu ID
+        category_list = Category.list_by_traveller(1)
+
+        dropdown_list = DropDown()
+        choosen_category = [spot.category]
+        for i in category_list:
+            category_name = i.name
+            text_string = category_name
+
+            btn = Button(text=text_string, size_hint_y=None, height=50)
+            btn.bind(on_press=lambda btn:
+                     [dropdown_list.select(btn.text),
+                      choosen_category.pop(),
+                      choosen_category.insert(0, i)])
+
+            dropdown_list.add_widget(btn)
+
+        dropdown_list_button = Button()
+        dropdown_list_button.bind(on_release=dropdown_list.open)
+
+        dropdown_list.bind(on_select=lambda instance, x:
+                           setattr(dropdown_list_button, 'text', x))
+
+        #deixando o valor corrente
+        dropdown_list.select(spot.category.name)
+
+        category_vertical_box_layout.add_widget(category_label)
+        category_vertical_box_layout.add_widget(dropdown_list_button)
+
+        money_spent_vertical_box_layout = BoxLayout(orientation='vertical')
+        money_spent_label = Label(text="Valor", font_size='16sp',
+                                 halign='center', valign='middle')
+        money_spent_input = TextInput(text=str(spot.money_spent), multiline=False)
+
+        money_spent_vertical_box_layout.add_widget(money_spent_label)
+        money_spent_vertical_box_layout.add_widget(money_spent_input)
+
+        cv_horizontal_box_layout.add_widget(category_vertical_box_layout)
+        cv_horizontal_box_layout.add_widget(money_spent_vertical_box_layout)
+        cv_horizontal_box_layout.add_widget(Label())
+        cv_horizontal_box_layout.add_widget(Label())
+
+        update_spot_layout.add_widget(cv_horizontal_box_layout)
+
+        members_placeholder_box_layout = BoxLayout()
+
+        members_vertical_box = BoxLayout(orientation='vertical')
+        members_label = Label(text="Membros", font_size='16sp',
+                                 halign='center', valign='middle')
+
+        members_check_box_placeholder = ScrollView()
+
+        table_layout = GridLayout(cols=1, row_default_height=30, size_hint_y=None, padding=(30, 50, 30, 50))
+        table_layout.bind(minimum_height=table_layout.setter('height'))
+
+        #TODO Na integração acessar traveller e pegar membros
+        members_list = Member.list_by_traveller(1)
+
+        #posicionando os membros já selecionados
+        members_list_output = []
+        for member in spot.members:
+            members_list_output.append(member)
+
+        for member in members_list:
+            line = BoxLayout()
+            checkbox = CheckBox()
+
+            #marcando os membros já selecionados
+            if member.id in [j.id for j in members_list_output]:
+                checkbox.active = True
+
+            #basicamente um if, elif, else, só que tem que ser tudo em lambda
+            checkbox.bind(on_press=lambda _, x=member:
+                          members_list_output.append(x) if
+                          self.checkbox_append_check(checkbox.state, x,
+                                               members_list_output) else
+                          (members_list_output.remove(self.checkbox_find_equivalent(x, members_list_output)) if
+                           self.checkbox_remove_check(checkbox.state, x,
+                                                      members_list_output) else
+                           True==True))
+
+            line.add_widget(checkbox)
+
+            member_name = Label(text=member.name)
+            line.add_widget(member_name)
+            table_layout.add_widget(line)
+
+        members_check_box_placeholder.add_widget(table_layout)
+        members_vertical_box.add_widget(members_label)
+        members_vertical_box.add_widget(members_check_box_placeholder)
+
+        members_placeholder_box_layout.add_widget(members_vertical_box)
+        members_placeholder_box_layout.add_widget(Label())
+
+        update_spot_layout.add_widget(members_placeholder_box_layout)
+
+        bottom_horizontal_box_layout = BoxLayout()
+        bottom_horizontal_box_layout.cols = 4
+
+        #status
+        status_vertical_box_layout = BoxLayout(orientation='vertical')
+        status_label = Label(text="Status *", font_size='16sp',
+                                 halign='center', valign='middle')
+
+        status_dropdown_list = DropDown()
+        choosen_status = [spot.status]
+        options = ['Aberto','Encerrado','Cancelado']
+        for option in options:
+            btn = Button(text=option, size_hint_y=None, height=50)
+            btn.bind(on_press=lambda btn:
+                     [status_dropdown_list.select(btn.text),
+                      choosen_status.pop(),
+                      choosen_status.insert(0, i)])
+
+            status_dropdown_list.add_widget(btn)
+
+        status_dropdown_list_button = Button()
+        status_dropdown_list_button.bind(on_release=status_dropdown_list.open)
+
+        status_dropdown_list.bind(on_select=lambda instance, x:
+                           setattr(status_dropdown_list_button, 'text', x))
+
+        status_dropdown_list.select(spot.status)
+        status_vertical_box_layout.add_widget(status_label)
+        status_vertical_box_layout.add_widget(status_dropdown_list_button)
+
+        save_button_box_layout = BoxLayout(orientation='vertical')
+        save_button = Button(text='Salvar', font_size='18sp')
+        save_button.bind(on_press=lambda _, x=[spot_name_input,
+                                               start_hour_input,
+                                               end_hour_input,
+                                               choosen_category,
+                                               money_spent_input,
+                                               members_list_output,
+                                               choosen_status,
+                                               spot]:
+                         [self.on_save_option(x), print('member_list eh ',
+                                                        members_list_output),
+                          self.on_update_spot_option])
+
+        save_button_box_layout.add_widget(Label())
+        save_button_box_layout.add_widget(save_button)
+
+        return_button_box_layout = BoxLayout(orientation='vertical')
+        return_button = Button(text="Voltar", font_size='18sp')
+        return_button.bind(on_press=self.on_list_spots)
+
+        return_button_box_layout.add_widget(Label())
+        return_button_box_layout.add_widget(return_button)
+
+        bottom_horizontal_box_layout.add_widget(status_vertical_box_layout)
+        bottom_horizontal_box_layout.add_widget(Label())
+        bottom_horizontal_box_layout.add_widget(save_button_box_layout)
+        bottom_horizontal_box_layout.add_widget(return_button_box_layout)
+
+        update_spot_layout.add_widget(bottom_horizontal_box_layout)
+
+        self.add_widget(update_spot_layout)
+
+    def checkbox_remove_check(self, checkbox_state, member, member_list):
+        if checkbox_state == 'normal':
+            if member.id in [j.id for j in member_list]:
+                return True
+            else:
+                return False
+        return False
+
+    def checkbox_append_check(self, checkbox_state, member, member_list):
+        if checkbox_state == 'down':
+            if member.id not in [j.id for j in member_list]:
+                return True
+            else:
+                return False
+        return False
+
+    def checkbox_find_equivalent(self, member, member_list):
+        for i in member_list:
+            if i.id == member.id:
+                return i
 
     def on_delete_spot_option(self, spot):
         self.clear_widgets()
+
+    def on_save_option(self, arguments_list):
+        #string não pode ser vazia
+        name_field = self.check_name_field(arguments_list[0].text)
+        if name_field is None:
+            self.show_popup('Erro Nome','Campo nome não preenchido')
+            return
+
+        #testes de campo de data de início
+        start_hour_datetime = self.check_time_field(arguments_list[1].text)
+        if start_hour_datetime is None:
+            self.show_popup('Erro data e hora de início',
+                            'A data e hora deve estar no formato \"AAAA-MM-DD HH:MM:SS\"')
+            return
+
+        #testes de campo de data de fim
+        end_hour_datetime = self.check_time_field(arguments_list[2].text)
+        if end_hour_datetime is None:
+            self.show_popup('Erro Data e hora de fim',
+                            'A data e hora deve estar no formato \"AAAA-MM-DD HH:MM:SS\"')
+            return
+
+        #checar se hora de início é maior que hora fim 
+        if start_hour_datetime >= end_hour_datetime:
+            self.show_popup('Erro Data e hora',
+                            'A data e hora do fim não podem ser menores que os do início')
+            return
+
+        #checar se alguma categoria foi selecionada
+        category_object = self.check_category_field(arguments_list[3])
+        if category_object is None:
+            self.show_popup('Erro Categoria',
+                            'Selecione pelo menos uma categoria')
+            return
+
+        #checar valor dinheiro
+        money_float = self.check_money_spent_field(arguments_list[4].text)
+        if money_float is None:
+            self.show_popup('Erro Dinheiro gasto',
+                            'O campo de dinheiro deve estar no formato \"XX,XX\"')
+            return
+
+        #checar membros é no controller
+        spot_members_list = arguments_list[5]
+        status = arguments_list[6]
+        spot = arguments_list[7]
+        create_spot_validation, message = self.trip_controller.update_spot(name_field,
+                                                                           money_float,
+                                                                           start_hour_datetime,
+                                                                           end_hour_datetime,
+                                                                           category_object,
+                                                                           spot_members_list,
+                                                                           status,
+                                                                           spot)
+        if not(create_spot_validation):
+            self.show_popup('Erro', message)
+        else:
+            self.show_popup('Spot criado', message)
+
+    def show_popup(self, title: str, text: str, button_text="Voltar"):
+        popup = Popup(title=title, size_hint=(None, None), size=(500, 200))
+        layout = GridLayout(cols=1, spacing=10, padding=10)
+        layout.add_widget(Label(text=text))
+        btn = Button(text=button_text, size_hint=(1, None), height=50)
+        btn.bind(on_press=popup.dismiss)
+        layout.add_widget(btn)
+        popup.add_widget(layout)
+        popup.open()
+
+    def check_name_field(self, name_field: str):
+        name_field = name_field.strip()
+        if len(name_field) <= 0:
+            return None
+        else:
+            return name_field
+
+    def check_time_field(self, time_field: str):
+        try:
+            time_field = time_field.strip()
+            datetime_object = datetime.strptime(time_field,
+                                                   '%Y-%m-%d %H:%M:%S')
+        except:
+            return None
+        else:
+            return datetime_object
+
+    def check_category_field(self, category_field: list):
+        if category_field[0] is None:
+            return None
+        else:
+            return category_field[0]
+
+    def check_money_spent_field(self, money_spent_field: str):
+        try:
+            money_spent_field = money_spent_field.strip()
+            money_spent_field = money_spent_field.replace(',','.')
+            money_float = float(money_spent_field)
+        except:
+            return None
+        else:
+            return money_float
 

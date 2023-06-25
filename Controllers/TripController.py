@@ -9,6 +9,7 @@ from Model.Trip import Trip
 class TripController:
     def __init__(self):
         self.__trips = {}  # Lista de viagens
+        self.__spots = []
 
     def create_trip(self, title, start_date: date, end_date: date, traveller_id, status: str = 'Em planejamento'):
         self.__update_trip_list(traveller_id)
@@ -126,11 +127,10 @@ class TripController:
 
     #TODO na integração essa função provavelmente será usado pra preencher os
     #spots da trip
-    def get_spots(self):
+    def get_spots(self, traveller_id):
         #select no DB
         database = Database()
-        #TODO alterar na integração pra pegar os relativos a viagem
-        registers = database.select("SELECT * FROM spots")
+        registers = database.select("SELECT * FROM spots WHERE traveller_id = ?", (traveller_id,))
         if registers is None:
             return []
         else:
@@ -154,9 +154,121 @@ class TripController:
                                      spot_tuple[3],
                                      category,
                                      member_list,
+                                     current_spot_id,
                                      spot_tuple[4],
-                                     spot_tuple[6],
-                                     current_spot_id) #faltou comentarios, mas eh outro UC
+                                     spot_tuple[6]) #faltou comentarios, mas eh outro UC
                 spots.append(spot_instance)
             return spots
 
+    def create_spot(self,
+                    name_field,
+                    money_float,
+                    start_hour_datetime,
+                    end_hour_datetime,
+                    category_object,
+                    spot_members_list):
+
+        time_check, member, conflciting_spot = self.check_members_spots_time_rule(spot_members_list,
+                                                                                  start_hour_datetime,
+                                                                                  end_hour_datetime)
+        if not(time_check):
+            return False, f'''{member.name} já está participando de spot
+            {conflciting_spot.name} salvo no mesmo horário'''
+
+        spot_instance = Spot(name_field,
+                             money_float,
+                             start_hour_datetime,
+                             end_hour_datetime,
+                             category_object,
+                             spot_members_list)
+        #salvar registro e pegar database_id
+        database = Database()
+        values = {"name": spot_instance.name,
+                  "start_hour": spot_instance.start_hour,
+                  "end_hour": spot_instance.end_hour,
+                  "status": spot_instance.status,
+                  "value": spot_instance.money_spent,
+                  "rating": spot_instance.rating,
+                  "trip_id": 1, #TODO na integração inserir id da trip em questão
+                  "category_id": spot_instance.category.id}
+        new_database_id = database.insert("spots", values)
+
+        #coloca o database id correto
+        spot_instance.spot_database_id = new_database_id
+        #adiciona a instancia ao controlador
+        self.spots.append(spot_instance)
+
+        #atulizar tabela relacional spot_members
+        self.create_spot_members_table_registers(spot_instance.members,
+                                                spot_instance.spot_database_id)
+
+        return True, 'Spot criado com sucesso'
+
+    def update_spot(self,
+                    name_field,
+                    money_float,
+                    start_hour_datetime,
+                    end_hour_datetime,
+                    category_object,
+                    spot_members_list,
+                    status,
+                    spot):
+
+        time_check, member, conflciting_spot = self.check_members_spots_time_rule(spot_members_list,
+                                                                                  start_hour_datetime,
+                                                                                  end_hour_datetime)
+        if not(time_check):
+            return False, f'''{member.name} já está participando de spot
+            {conflciting_spot.name} salvo no mesmo horário'''
+
+        #fazendo alterações na intância
+        spot.name = name_field
+        spot.money_spent = money_float
+        spot.start_hour = start_hour_datetime
+        spot.end_hour = end_hour_datetime
+        spot.category = category_object
+
+        #TODO restrição de integridade na integração
+        spot.status = spot.status
+
+        #deletando antigos, inserindo novos
+        self.delete_spot_members_table_registers(spot.members, spot.spot_database_id)
+        self.create_spot_members_table_registers(spot_members_list, spot.spot_database_id)
+
+        #atualiza a instancia
+        spot.members = spot_members_list
+
+        #alterando registros no db
+        database = Database()
+        values = {"name": spot.name,
+                  "start_hour": spot.start_hour,
+                  "end_hour": spot.end_hour,
+                  "status": spot.status,
+                  "value": spot.money_spent,
+                  "rating": spot.rating,
+                  "trip_id": 1, #TODO na integração inserir id da trip em questão
+                  "category_id": spot.category.id}
+        database.update("spots", spot.spot_database_id, values)
+
+        return True, 'Spot editado com sucesso'
+
+    def check_members_spots_time_rule(self, spot_members_list, start_time, end_time):
+        return True, None, None
+        pass
+
+    def create_spot_members_table_registers(self, members_list, spot_id):
+        #print('members_list eh ', members_list)
+        for member in members_list:
+            member.save_spot_member(spot_id)
+
+    def delete_spot_members_table_registers(self, members_list, spot_id):
+        for member in members_list:
+            member.delete_spot_member(spot_id)
+
+    @property
+    def spots(self):
+        return self.__spots
+
+    @spots.setter
+    def spots(self, new_spots):
+        self.__spots = new_spots
