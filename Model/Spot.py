@@ -4,7 +4,7 @@ from Model.Category import Category
 class Spot:
     def __init__(self, name: str, money_spent: float, start_hour: date,
                  end_hour: date, category: Category, members: list,
-                 status='Aberto', rating=0, database_id=None):
+                 spot_database_id=None, status='Aberto', rating=0,):
         #database_id será necessário ao buscar os comentários específicos
         #TODO o método de criar um novo spot deve criar o id, e o get_spots
         #já tera ele pela busca
@@ -14,9 +14,9 @@ class Spot:
         self.__end_hour = end_hour
         self.__category = category
         self.__members = members
+        self.__spot_database_id = spot_database_id
         self.__status = status
         self.__rating = rating
-        self.__database_id = database_id
         #TODO comentarios serão preenchidos após a instanciacao por alguma funcao da UC de comment
         self.__comments = []
 
@@ -93,10 +93,9 @@ class Spot:
         self.__comments = new_comments
 
     @property
-    def database_id(self):
-        return self.__database_id
+    def spot_database_id(self):
+        return self.__spot_database_id
 
-    @database_id.setter
-    def database_id(self, new_database_id):
-        self.__database_id = new_database_id
-
+    @spot_database_id.setter
+    def spot_database_id(self, new_spot_database_id):
+        self.__spot_database_id = new_spot_database_id

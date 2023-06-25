@@ -82,7 +82,31 @@ class Member:
 		traveller_id = self.get_traveller_id_for_member()
 		query = f"DELETE FROM traveller_members WHERE member_id={member_id} AND traveller_id={traveller_id}"
 		db.raw_sql(query)
-	
+
+	# Relacionamento Member e Spot
+	def save_spot_member(self, spot_id):
+		db = Database()
+		values = {
+			'member_id': self.__id,
+			'spot_id': spot_id
+		}
+		db.insert('spot_members', values)
+
+	def get_spot_id_for_member(self):
+		db = Database()
+		member_id = self.__id
+		query = f"SELECT spot_id FROM spot_members WHERE member_id={member_id}"
+		result = db.select(query)
+		if result:
+			return result[0][0]
+		return None
+
+	def delete_spot_member(self, spot_id):
+		db = Database()
+		member_id = self.__id
+		query = f"DELETE FROM spot_members WHERE member_id={member_id} AND spot_id={spot_id}"
+		db.raw_sql(query)
+
 	@staticmethod
 	def validate_member_name_by_traveller(name: str, traveller_id: int, member_id = None) -> bool:
 		db = Database()

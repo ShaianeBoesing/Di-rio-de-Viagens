@@ -69,7 +69,7 @@ class LoginView(Screen):
             self.show_popup("Erro ao entrar!", message)
             self.password_input.text = ''
 
-    def show_popup(self, title: str, text: str, button_text="voltar"):
+    def show_popup(self, title: str, text: str, button_text="Voltar"):
         popup = Popup(title=title, size_hint=(None, None), size=(425, 200))
         layout = GridLayout(cols=1, spacing=10, padding=10)
         layout.add_widget(Label(text=text))
