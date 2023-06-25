@@ -71,7 +71,6 @@ class CategoryEdit(Screen):
 	def validate_is_unique(self):
 		is_unique = self.controller.name_is_valid(self.name_input.text.strip(), self.my_app_instance.traveller_id,
 		                                          self.member_id)
-		print(is_unique)
 		if not is_unique:
 			popup = Popup(title='Erro', content=Label(text='Este nome já existe.'), size_hint=(None, None), size=(400, 200))
 			popup.open()

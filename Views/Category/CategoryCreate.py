@@ -42,7 +42,6 @@ class CategoryCreate(Screen):
 	def save_category(self, *args):
 		is_valid_category = self.validate_category()
 		if is_valid_category:
-			print(self.my_app_instance.traveller_id)
 			self.controller.create_category(self.name_input.text, self.my_app_instance.traveller_id)
 			self.manager.current = 'category_list'
 	
