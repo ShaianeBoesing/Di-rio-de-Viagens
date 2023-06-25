@@ -39,3 +39,5 @@ class MemberController:
 		
 		return members
 	
+	def name_is_valid(self, name: str, traveller_id: int, member_id = None) -> bool:
+		return Member.validate_member_name_by_traveller(name, traveller_id, member_id)

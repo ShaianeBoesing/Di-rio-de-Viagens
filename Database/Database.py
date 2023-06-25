@@ -21,6 +21,7 @@ class Database:
     return self.cursor.fetchall()
 
   def select(self, query):
+    print(query)
     self.cursor.execute(query)
     return self.cursor.fetchall()
 

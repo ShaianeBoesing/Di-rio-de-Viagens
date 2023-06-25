@@ -9,10 +9,11 @@ from Controllers.CategoryController import CategoryController
 
 
 class CategoryEdit(Screen):
-	def __init__(self, controller: CategoryController, category_id=None, **kwargs):
+	def __init__(self, controller: CategoryController, my_app_instance, category_id=None, **kwargs):
 		super().__init__(**kwargs)
 		self.category_id = category_id
 		self.controller = controller
+		self.my_app_instance = my_app_instance
 		layout = GridLayout(cols=1, padding=(30, 50, 30, 50), pos_hint={'center_x': 0.5, 'center_y': 0.5})
 		
 		layout.add_widget(Label(text="Editar Categoria"))
@@ -42,10 +43,8 @@ class CategoryEdit(Screen):
 			self.name_input.text = category['name']
 	
 	def save_category(self, *args):
-		if not self.name_input.text.strip():
-			popup = Popup(title='Erro', content=Label(text='O nome não pode ser deixado em branco.'), size_hint=(None, None), size=(400, 200))
-			popup.open()
-		else:
+		is_valid_category = validate_category()
+		if is_valid_category():
 			self.controller.update_category(
 				category_id=self.category_id,
 				name=self.name_input.text
@@ -56,3 +55,24 @@ class CategoryEdit(Screen):
 	def on_return(self, *args):
 		self.manager.current = 'category_list'
 		self.manager.transition = SlideTransition(direction="right")
+	
+	def validate_category(self):
+		return self.validate_has_content() and self.validate_is_unique()
+	
+	def validate_has_content(self):
+		has_content = self.name_input.text.strip()
+		if not has_content:
+			popup = Popup(title='Erro', content=Label(text='O nome não pode ser deixado em branco.'), size_hint=(None, None),
+			              size=(400, 200))
+			popup.open()
+		
+		return has_content
+	
+	def validate_is_unique(self):
+		is_unique = self.controller.name_is_valid(self.name_input.text.strip(), self.my_app_instance.traveller_id,
+		                                          self.member_id)
+		print(is_unique)
+		if not is_unique:
+			popup = Popup(title='Erro', content=Label(text='Este nome já existe.'), size_hint=(None, None), size=(400, 200))
+			popup.open()
+		return is_unique

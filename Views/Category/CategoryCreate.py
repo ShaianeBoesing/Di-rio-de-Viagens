@@ -11,7 +11,7 @@ from Controllers.CategoryController import CategoryController
 class CategoryCreate(Screen):
 	def __init__(self, controller: CategoryController, my_app_instance, **kwargs):
 		super().__init__(**kwargs)
-		self.TEMP_TRAVELLER_ID = my_app_instance
+		self.my_app_instance = my_app_instance
 		self.controller = controller
 		layout = GridLayout(cols=1, padding=(30, 50, 30, 50), pos_hint={'center_x': 0.5, 'center_y': 0.5})
 
@@ -40,11 +40,10 @@ class CategoryCreate(Screen):
 		self.name_input.text = ""
 	
 	def save_category(self, *args):
-		if not self.name_input.text.strip():
-			popup = Popup(title='Erro', content=Label(text='O nome não pode ser deixado em branco.'), size_hint=(None, None), size=(400, 200))
-			popup.open()
-		else:
-			self.controller.create_category(self.name_input.text, self.TEMP_TRAVELLER_ID.traveller_id)
+		is_valid_category = self.validate_category()
+		if is_valid_category:
+			print(self.my_app_instance.traveller_id)
+			self.controller.create_category(self.name_input.text, self.my_app_instance.traveller_id)
 			self.manager.current = 'category_list'
 	
 	def on_return(self, *args):
