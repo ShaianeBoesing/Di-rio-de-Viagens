@@ -51,19 +51,19 @@ class UserController:
         cursor.execute('SELECT * FROM travellers WHERE username=?', (username,))
         result = cursor.fetchone()
         if result is None:
-            return False, 'Usuário não registrado!'
+            return False, None, 'Usuário não registrado!'
 
         stored_user = self.get_user_by_username(username)
 
         #better to be safe than sorry
         if stored_user is None:
-            return False, 'Usuário não encontrado'
+            return False, None, 'Usuário não encontrado'
 
         if stored_user.password == self.md5_to_hash_password(password):
             self.__logged_user = stored_user
             return True, stored_user.traveller_id, f'Entrou como {username}'
         else:
-            return False, 'Senha incorreta!'
+            return False, None, 'Senha incorreta!'
 
     def get_user_by_username(self, username):
         # Retrieve a user by username

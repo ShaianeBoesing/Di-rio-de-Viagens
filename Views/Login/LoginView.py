@@ -55,7 +55,7 @@ class LoginView(Screen):
     def on_login(self, instance):
         username = self.username_input.text
         password = self.password_input.text
-
+        print(self.user_contoller.login(username, password))
         user_validation, traveller_id, message = self.user_contoller.login(username, password)
         if user_validation:
             self.show_popup('Entrou', message, 'Confirmar')

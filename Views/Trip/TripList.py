@@ -14,7 +14,6 @@ class TripList(Screen):
         super().__init__(**kwargs)
         self.trips = []
         self.controller = controller
-        self.TEMP_TRAVELLER_ID = 1
         self.my_app_instance = my_app_instance
 
     def on_pre_enter(self, *args):
@@ -82,16 +81,20 @@ class TripList(Screen):
         buttons_layout = BoxLayout(size_hint=(1, 0.1), padding=10)
         member_button = Button(text="Ver membros", font_size='18sp')
         new_button = Button(text="Criar Viagem", font_size='18sp')
+        logout_button = Button(text="Sair", font_size='18sp', size_hint_x=0.2)
+
         buttons_layout.add_widget(member_button)
         buttons_layout.add_widget(new_button)
         layout.add_widget(buttons_layout)
-
+        header_layout.add_widget(logout_button)
         # Adiciona o layout principal à tela
         self.add_widget(layout)
 
         # Adiciona os callbacks aos botões
         member_button.bind(on_release=self.on_member)
         new_button.bind(on_release=self.on_new_trip)
+        logout_button.bind(on_release=self.on_logout)
+
 
     def on_new_trip(self, *args):
         self.manager.current = 'trip_create'
@@ -139,3 +142,8 @@ class TripList(Screen):
         layout.add_widget(btn)
         popup.add_widget(layout)
         popup.open()
+
+    def on_logout(self, *args):
+        self.my_app_instance.traveller_id = None
+        self.manager.current = 'main'
+        self.manager.transition = SlideTransition(direction="left")
