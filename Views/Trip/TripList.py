@@ -80,9 +80,9 @@ class TripList(Screen):
 
         # Botões
         buttons_layout = BoxLayout(size_hint=(1, 0.1), padding=10)
-        back_button = Button(text="Voltar", font_size='18sp')
-        new_button = Button(text="Novo", font_size='18sp')
-        buttons_layout.add_widget(back_button)
+        member_button = Button(text="Ver membros", font_size='18sp')
+        new_button = Button(text="Criar Viagem", font_size='18sp')
+        buttons_layout.add_widget(member_button)
         buttons_layout.add_widget(new_button)
         layout.add_widget(buttons_layout)
 
@@ -90,7 +90,7 @@ class TripList(Screen):
         self.add_widget(layout)
 
         # Adiciona os callbacks aos botões
-        back_button.bind(on_release=self.on_back)
+        member_button.bind(on_release=self.on_member)
         new_button.bind(on_release=self.on_new_trip)
 
     def on_new_trip(self, *args):
@@ -126,9 +126,9 @@ class TripList(Screen):
         cancel_button.bind(on_release=popup.dismiss)
         popup.open()
 
-    def on_back(self, *args):
+    def on_member(self, *args):
         self.manager.transition.direction = "right"
-        self.manager.current = "main"
+        self.manager.current = "member_list"
 
     def show_popup(self, title, text):
         popup = Popup(title=title, size_hint=(None, None), size=(625, 200))

@@ -44,13 +44,13 @@ class MyApp(App):
         sm.add_widget(RegisterView(self.__user_controller, name='register_view'))
         sm.add_widget(LoginView(self.__user_controller, self, name='login_view'))
 
-        sm.add_widget(MemberList(self.__member_controller, name='member_list'))
-        sm.add_widget(MemberCreate(self.__member_controller, name='member_create'))
-        sm.add_widget(MemberEdit(self.__member_controller, name='member_edit'))
+        sm.add_widget(MemberList(self.__member_controller, self, name='member_list'))
+        sm.add_widget(MemberCreate(self.__member_controller, self, name='member_create'))
+        sm.add_widget(MemberEdit(self.__member_controller, self, name='member_edit'))
 
-        sm.add_widget(CategoryList(self.__category_controller, name='category_list'))
-        sm.add_widget(CategoryCreate(self.__category_controller, name='category_create'))
-        sm.add_widget(CategoryEdit(self.__category_controller, name='category_edit'))
+        sm.add_widget(CategoryList(self.__category_controller, self, name='category_list'))
+        sm.add_widget(CategoryCreate(self.__category_controller, self, name='category_create'))
+        sm.add_widget(CategoryEdit(self.__category_controller, self, name='category_edit'))
 
         sm.add_widget(SpotView(self.__trip_controller, name='spot_view'))
         sm.add_widget(SpotCreate(self.__trip_controller, name='spot_create'))

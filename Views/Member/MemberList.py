@@ -9,17 +9,17 @@ from kivy.uix.scrollview import ScrollView
 from Controllers.MemberController import MemberController
 
 class MemberList(Screen):
-	def __init__(self, controller: MemberController, **kwargs):
+	def __init__(self, controller: MemberController, my_app_instance, **kwargs):
 		super().__init__(**kwargs)
 		self.members = []
 		self.controller = controller
-		self.TEMP_TRAVELLER_ID = 1
+		self.TEMP_TRAVELLER_ID = my_app_instance
 
 	def on_pre_enter(self, *args):
 		self.load()
 	
 	def load_members(self):
-		self.members = self.controller.list_members_by_traveller(self.TEMP_TRAVELLER_ID)
+		self.members = self.controller.list_members_by_traveller(self.TEMP_TRAVELLER_ID.traveller_id)
 	
 	def load(self):
 		self.clear_widgets() # Limpa todos os widgets da tela para não se sobrepor
@@ -112,4 +112,4 @@ class MemberList(Screen):
 	
 	def on_back(self, *args):
 		self.manager.transition.direction = "right"
-		self.manager.current = "main"
+		self.manager.current = "trip_list"

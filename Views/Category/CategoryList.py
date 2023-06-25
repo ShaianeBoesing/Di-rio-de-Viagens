@@ -9,11 +9,11 @@ from kivy.uix.scrollview import ScrollView
 from Controllers.CategoryController import CategoryController
 
 class CategoryList(Screen):
-	def __init__(self, controller: CategoryController, **kwargs):
+	def __init__(self, controller: CategoryController, my_app_instance, **kwargs):
 		super().__init__(**kwargs)
 		self.categories = []
 		self.controller = controller
-		self.TEMP_TRAVELLER_ID = 1
+		self.TEMP_TRAVELLER_ID = my_app_instance.traveller_id
 
 	def on_pre_enter(self, *args):
 		self.load()
