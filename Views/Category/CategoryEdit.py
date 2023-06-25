@@ -43,8 +43,8 @@ class CategoryEdit(Screen):
 			self.name_input.text = category['name']
 	
 	def save_category(self, *args):
-		is_valid_category = validate_category()
-		if is_valid_category():
+		is_valid_category = self.validate_category()
+		if is_valid_category:
 			self.controller.update_category(
 				category_id=self.category_id,
 				name=self.name_input.text
@@ -70,7 +70,7 @@ class CategoryEdit(Screen):
 	
 	def validate_is_unique(self):
 		is_unique = self.controller.name_is_valid(self.name_input.text.strip(), self.my_app_instance.traveller_id,
-		                                          self.member_id)
+		                                          self.category_id)
 		if not is_unique:
 			popup = Popup(title='Erro', content=Label(text='Este nome já existe.'), size_hint=(None, None), size=(400, 200))
 			popup.open()

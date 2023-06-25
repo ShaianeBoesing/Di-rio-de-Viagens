@@ -87,7 +87,7 @@ class Category:
 	@staticmethod
 	def validate_category_name_by_traveller(name: str, traveller_id: int, category_id=None) -> bool:
 		db = Database()
-		query = f"SELECT * FROM categories JOIN traveller_categories ON categories.id = traveller_categories.category_id WHERE categories.name = '{name}' AND traveller_categories.traveller_id = {traveller_id}"
+		query = f"SELECT * FROM categories JOIN traveller_categories ON categories.id = traveller_categories.category_id WHERE categories.name = '{name}' AND traveller_categories.traveller_id = {traveller_id} "
 		if category_id is not None:
 			query += f"AND categories.id <> {category_id}"
 		result = db.select(query)
