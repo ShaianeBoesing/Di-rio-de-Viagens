@@ -64,7 +64,7 @@ class TripEdit(Screen):
         button_grid.add_widget(register_button)
 
         register_button = Button(text="Excluir")
-        register_button.bind(on_press=self.on_delete_member)
+        register_button.bind(on_press=self.on_delete_trip)
         button_grid.add_widget(register_button)
 
         # Add the register layout to the screen
@@ -130,10 +130,10 @@ class TripEdit(Screen):
         popup.add_widget(layout)
         popup.open()
 
-    def on_delete_member(self, trip_title):
+    def on_delete_trip(self, trip_title):
         self.confirm_delete_trip(self.trip_title)
 
-    def delete_member(self, trip_title, popup):
+    def delete_trip(self, trip_title, popup):
         self.trip_controller.delete_trip(trip_title, self.my_app_instance.traveller_id)
         popup.dismiss()
         self.on_return(self)
@@ -149,6 +149,6 @@ class TripEdit(Screen):
         buttons_layout.add_widget(cancel_button)
         content.add_widget(buttons_layout)
         popup = Popup(title='Excluir viagem', content=content, size_hint=(0.5, 0.5))
-        confirm_button.bind(on_release=lambda _: self.delete_member(trip_title, popup))
+        confirm_button.bind(on_release=lambda _: self.delete_trip(trip_title, popup))
         cancel_button.bind(on_release=popup.dismiss)
         popup.open()

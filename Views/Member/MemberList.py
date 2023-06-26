@@ -91,7 +91,7 @@ class MemberList(Screen):
 		self.confirm_delete_member(member_id)
 		
 	def delete_member(self, member_id, popup):
-		self.controller.delete_member(member_id)
+		self.controller.delete_trip(member_id)
 		popup.dismiss()
 		self.load()
 		
