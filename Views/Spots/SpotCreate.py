@@ -139,8 +139,19 @@ class SpotCreate(Screen):
         money_spent_vertical_box_layout.add_widget(money_spent_label)
         money_spent_vertical_box_layout.add_widget(money_spent_input)
 
+
+        #rating
+        rating_box_layout = BoxLayout(orientation='vertical')
+        rating_label = Label(text="Avaliação", font_size='16sp',
+                                  halign='center', valign='middle')
+        rating_input = TextInput(multiline=False)
+
+        rating_box_layout.add_widget(rating_label)
+        rating_box_layout.add_widget(rating_input)
+
         cv_horizontal_box_layout.add_widget(category_vertical_box_layout)
         cv_horizontal_box_layout.add_widget(money_spent_vertical_box_layout)
+        cv_horizontal_box_layout.add_widget(rating_box_layout)
         cv_horizontal_box_layout.add_widget(Label())
         cv_horizontal_box_layout.add_widget(Label())
 
@@ -193,7 +204,8 @@ class SpotCreate(Screen):
                                                choosen_category,
                                                money_spent_input,
                                                members_list_output,
-                                               start_date_input]:
+                                               start_date_input,
+                                               rating_input]:
                          self.on_save_option(x))
 
         save_button_box_layout.add_widget(Label())
@@ -242,6 +254,17 @@ class SpotCreate(Screen):
         else:
             start_hour_datetime = start_hour_datetime + ':00'
 
+        spot_rating = self.check_name_field(arguments_list[7].text)
+        try:
+            if not 0 <= int(spot_rating) <= 5:
+                self.show_popup('Erro na avaliação', 'A avaliação deve ser um numero entre 0 a 5')
+                return
+        except Exception as e:
+            print(e)
+            self.show_popup('Erro na avaliação',
+                            'Ocorreu algum erro inesperado, a avaliação deve ser um numero entre 0 a 5')
+            return
+
         #testes de campo de data de fim
         end_hour_datetime = self.check_time_field(arguments_list[2].text)
         if end_hour_datetime is None:
@@ -288,7 +311,8 @@ class SpotCreate(Screen):
                                                                            (start_date + ' ' + end_hour_datetime),
                                                                            category_object,
                                                                            spot_members_list,
-                                                                           self.my_app_instance.traveller_id)
+                                                                           self.my_app_instance.traveller_id,
+                                                                           spot_rating)
         if not(create_spot_validation):
             self.show_popup('Erro', message)
         else:

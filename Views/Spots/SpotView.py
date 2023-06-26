@@ -344,8 +344,18 @@ class SpotView(Screen):
         money_spent_vertical_box_layout.add_widget(money_spent_label)
         money_spent_vertical_box_layout.add_widget(money_spent_input)
 
+        #rating
+        rating_box_layout = BoxLayout(orientation='vertical')
+        rating_label = Label(text="Avaliação", font_size='16sp',
+                                  halign='center', valign='middle')
+        rating_input = TextInput(text=str(spot.rating), multiline=False)
+
+        rating_box_layout.add_widget(rating_label)
+        rating_box_layout.add_widget(rating_input)
+
         cv_horizontal_box_layout.add_widget(category_vertical_box_layout)
         cv_horizontal_box_layout.add_widget(money_spent_vertical_box_layout)
+        cv_horizontal_box_layout.add_widget(rating_box_layout)
         cv_horizontal_box_layout.add_widget(Label())
         cv_horizontal_box_layout.add_widget(Label())
 
@@ -442,7 +452,8 @@ class SpotView(Screen):
                                                members_list_output,
                                                choosen_status,
                                                spot,
-                                               start_date_input]:
+                                               start_date_input,
+                                               rating_input]:
                          [self.on_save_option(x), print('member_list eh ',
                                                         members_list_output),
                           self.on_update_spot_option])
@@ -495,6 +506,16 @@ class SpotView(Screen):
         name_field = self.check_name_field(arguments_list[0].text)
         if name_field is None:
             self.show_popup('Erro Nome','Campo nome não preenchido')
+            return
+
+        spot_rating = self.check_name_field(arguments_list[9].text)
+        try:
+            if not 0 <= int(spot_rating) <= 5:
+                self.show_popup('Erro na avaliação', 'A avaliação deve ser um numero entre 0 a 5')
+                return
+        except Exception as e:
+            print(e)
+            self.show_popup('Erro na avaliação', 'Ocorreu algum erro inesperado, a avaliação deve ser um numero entre 0 a 5')
             return
 
         # testes de campo de data de início
@@ -559,7 +580,8 @@ class SpotView(Screen):
                                                                            spot_members_list,
                                                                            status,
                                                                            spot,
-                                                                           self.my_app_instance.traveller_id)
+                                                                           self.my_app_instance.traveller_id,
+                                                                           spot_rating)
         if not(update_spot_validation):
             self.show_popup('Erro', message)
         else:

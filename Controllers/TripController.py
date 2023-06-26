@@ -176,7 +176,8 @@ class TripController:
                     end_hour_datetime,
                     category_object,
                     spot_members_list,
-                    traveller_id):
+                    traveller_id,
+                    spot_rating):
 
         time_check, member, conflciting_spot = self.check_members_spots_time_rule(spot_members_list,
                                                                                   start_hour_datetime,
@@ -190,7 +191,9 @@ class TripController:
                              start_hour_datetime,
                              end_hour_datetime,
                              category_object,
-                             spot_members_list)
+                             spot_members_list,
+                             rating=spot_rating
+                             )
         #pegando id da trip
         current_trip_id = self.get_trip_id(self.current_trip, traveller_id)
         #salvar registro e pegar database_id
@@ -225,7 +228,8 @@ class TripController:
                     spot_members_list,
                     status,
                     spot,
-                    traveller_id):
+                    traveller_id,
+                    spot_rating):
 
         time_check, member, conflciting_spot = self.check_members_spots_time_rule(spot_members_list,
                                                                                   start_hour_datetime,
@@ -240,7 +244,7 @@ class TripController:
         spot.start_hour = start_hour_datetime
         spot.end_hour = end_hour_datetime
         spot.category = category_object
-
+        spot.rating = spot_rating
         spot.status = status
 
         #deletando antigos, inserindo novos
