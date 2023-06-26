@@ -117,4 +117,4 @@ class CommentList(Screen):
 	
 	def on_back(self, *args):
 		self.manager.transition.direction = "right"
-		self.manager.current = "main"
+		self.manager.current = "spot_view"
