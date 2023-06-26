@@ -6,8 +6,7 @@ class Spot:
                  end_hour: date, category: Category, members: list,
                  spot_database_id=None, status='Aberto', rating=0,):
         #database_id será necessário ao buscar os comentários específicos
-        #TODO o método de criar um novo spot deve criar o id, e o get_spots
-        #já tera ele pela busca
+        #o método de criar um novo spot deve criar o id, e o get_spotsjá tera ele pela busca
         self.__name = name
         self.__money_spent = money_spent
         self.__start_hour = start_hour

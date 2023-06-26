@@ -26,14 +26,25 @@ class SpotView(Screen):
 
     def on_pre_enter(self):
         self.clear_widgets()
-        self.load_spots()
+        #self.load_spots()
+        current_trip = self.trip_controller.current_trip
+        if current_trip != None:
+            finished_trip_check_bool = self.trip_controller.finished_trip_check()
+            if finished_trip_check_bool:
+                self.trip_controller.cancel_all_spots()
+
         self.on_list_spots()
 
+    '''
     def load_spots(self):
-        self.trip_controller.spots = self.trip_controller.get_spots(self.my_app_instance.traveller_id)
+        current_trip = self.trip_controller.current_trip
+        if current_trip == None:
+            return
+        #self.trip_controller.spots = self.trip_controller.get_spots(self.trip_controller.current_trip)
+    '''
 
     def on_list_spots(self, *args):
-        spots = self.trip_controller.spots
+        spots = self.trip_controller.current_trip.spots
         self.clear_widgets()
 
         list_spot_layout = BoxLayout(orientation='vertical')
@@ -73,7 +84,9 @@ class SpotView(Screen):
             update_spot.bind(on_release=lambda _, spot_object=spot:
                              self.on_update_spot_option(spot_object))
             delete_spot.bind(on_release=lambda _, spot_object=spot:
-                             self.on_delete_spot_option(spot_object))
+                             self.show_popup('Erro viagem encerrada','Não é possível remover um spot de uma viagem encerrada')
+                             if self.trip_controller.finished_trip_check()
+                             else self.on_delete_spot_option(spot_object))
             actions_layout.add_widget(view_spot)
             actions_layout.add_widget(update_spot)
             actions_layout.add_widget(delete_spot)
@@ -83,20 +96,29 @@ class SpotView(Screen):
 
         # Botao
         buttons_layout = BoxLayout(size_hint=(1, 0.1), padding=10)
-        buttons_layout.add_widget(Label())
+
+        create_spot_button = Button(text="Novo spot", font_size='18sp')
+        create_spot_button.bind(on_press=lambda _: self.show_popup('Erro viagem encerrada','Não é possível criar um spot de uma viagem encerrada')
+                                if self.trip_controller.finished_trip_check()
+                                else self.on_create_spot_option())
+        buttons_layout.add_widget(create_spot_button)
 
         return_button = Button(text="Voltar", font_size='18sp')
         return_button.bind(on_press=self.on_return_trip)
         buttons_layout.add_widget(return_button)
+
         list_spot_layout.add_widget(buttons_layout)
 
         self.add_widget(list_spot_layout)
 
 
-    #TODO transicionar para a tela de trip no futuro
     def on_return_trip(self, *args):
         self.manager.transition.direction = "left"
-        self.manager.current = "main"
+        self.manager.current = "trip_list"
+
+    def on_create_spot_option(self, *args):
+        self.manager.transition.direction = "right"
+        self.manager.current = "spot_create"
 
     def on_view_spot_option(self, spot):
         self.clear_widgets()
@@ -129,7 +151,7 @@ class SpotView(Screen):
                                  size=(100, dp(40)), bold=True,
                                  font_size='16sp', halign='center',
                                  valign='middle')
-        start_hour = Label(text=spot.start_hour, text_size=self.size,
+        start_hour = Label(text=str(spot.start_hour), text_size=self.size,
                            size=(100, dp(40)),
                            font_size='18sp', halign='center', valign='middle')
         start_hour_vertical_box_layout.add_widget(start_hour_label)
@@ -139,7 +161,7 @@ class SpotView(Screen):
         end_hour_label = Label(text="Hora de fim", text_size=self.size,
                                size=(100, dp(40)), bold=True,
                                font_size='16sp', halign='center', valign='middle')
-        end_hour = Label(text=spot.end_hour, text_size=self.size,
+        end_hour = Label(text=str(spot.end_hour), text_size=self.size,
                          size=(100, dp(40)),
                          font_size='18sp', halign='center', valign='middle')
         end_hour_vertical_box_layout.add_widget(end_hour_label)
@@ -240,7 +262,7 @@ class SpotView(Screen):
         start_hour_label = Label(text="Hora de início *", font_size='16sp',
                                  halign='center', valign='middle')
 
-        start_hour_input = TextInput(text=spot.start_hour, multiline=False)
+        start_hour_input = TextInput(text=str(spot.start_hour), multiline=False)
 
         start_hour_vertical_box_layout.add_widget(start_hour_label)
         start_hour_vertical_box_layout.add_widget(start_hour_input)
@@ -249,7 +271,7 @@ class SpotView(Screen):
         end_hour_label = Label(text="Hora de fim *", font_size='16sp',
                                  halign='center', valign='middle')
 
-        end_hour_input = TextInput(text=spot.end_hour, multiline=False)
+        end_hour_input = TextInput(text=str(spot.end_hour), multiline=False)
 
         end_hour_vertical_box_layout.add_widget(end_hour_label)
         end_hour_vertical_box_layout.add_widget(end_hour_input)
@@ -268,8 +290,8 @@ class SpotView(Screen):
         category_vertical_box_layout = BoxLayout(orientation='vertical')
         category_label = Label(text="Categoria *", font_size='16sp',
                                  halign='center', valign='middle')
-        #TODO Na integração acessar traveller logado e pegar seu ID
-        category_list = Category.list_by_traveller(1)
+
+        category_list = Category.list_by_traveller(self.my_app_instance.traveller_id)
 
         dropdown_list = DropDown()
         choosen_category = [spot.category]
@@ -278,10 +300,10 @@ class SpotView(Screen):
             text_string = category_name
 
             btn = Button(text=text_string, size_hint_y=None, height=50)
-            btn.bind(on_press=lambda btn:
+            btn.bind(on_press=lambda btn, current_category=i:
                      [dropdown_list.select(btn.text),
                       choosen_category.pop(),
-                      choosen_category.insert(0, i)])
+                      choosen_category.insert(0, current_category)])
 
             dropdown_list.add_widget(btn)
 
@@ -323,8 +345,7 @@ class SpotView(Screen):
         table_layout = GridLayout(cols=1, row_default_height=30, size_hint_y=None, padding=(30, 50, 30, 50))
         table_layout.bind(minimum_height=table_layout.setter('height'))
 
-        #TODO Na integração acessar traveller e pegar membros
-        members_list = Member.list_by_traveller(1)
+        members_list = Member.list_by_traveller(self.my_app_instance.traveller_id)
 
         #posicionando os membros já selecionados
         members_list_output = []
@@ -377,10 +398,10 @@ class SpotView(Screen):
         options = ['Aberto','Encerrado','Cancelado']
         for option in options:
             btn = Button(text=option, size_hint_y=None, height=50)
-            btn.bind(on_press=lambda btn:
+            btn.bind(on_press=lambda btn, current_spot=option:
                      [status_dropdown_list.select(btn.text),
                       choosen_status.pop(),
-                      choosen_status.insert(0, i)])
+                      choosen_status.insert(0, current_spot)])
 
             status_dropdown_list.add_widget(btn)
 
@@ -449,7 +470,7 @@ class SpotView(Screen):
                 return i
 
     def on_delete_spot_option(self, spot):
-        self.clear_widgets()
+        delete_popup_answer = self.delete_popup(spot)
 
     def on_save_option(self, arguments_list):
         #string não pode ser vazia
@@ -494,20 +515,21 @@ class SpotView(Screen):
 
         #checar membros é no controller
         spot_members_list = arguments_list[5]
-        status = arguments_list[6]
+        status = arguments_list[6][0]
         spot = arguments_list[7]
-        create_spot_validation, message = self.trip_controller.update_spot(name_field,
+        update_spot_validation, message = self.trip_controller.update_spot(name_field,
                                                                            money_float,
                                                                            start_hour_datetime,
                                                                            end_hour_datetime,
                                                                            category_object,
                                                                            spot_members_list,
                                                                            status,
-                                                                           spot)
-        if not(create_spot_validation):
+                                                                           spot,
+                                                                           self.my_app_instance.traveller_id)
+        if not(update_spot_validation):
             self.show_popup('Erro', message)
         else:
-            self.show_popup('Spot criado', message)
+            self.show_popup('Spot atualizado', message)
 
     def show_popup(self, title: str, text: str, button_text="Voltar"):
         popup = Popup(title=title, size_hint=(None, None), size=(500, 200))
@@ -551,4 +573,23 @@ class SpotView(Screen):
             return None
         else:
             return money_float
+
+    def delete_popup(self, spot):
+        popup = Popup(title='Confirmar deleção', size_hint=(None, None), size=(500, 200))
+        layout = GridLayout(cols=1, spacing=10, padding=10)
+        layout.add_widget(Label(text='Você tem certeza que deseja excluir o spot?'))
+
+        return_btn = Button(text='Cancelar', size_hint=(1, None), height=50)
+        return_btn.bind(on_press=popup.dismiss)
+
+        confirm_button = Button(text='Confirmar', size_hint=(1, None), height=50)
+        confirm_button.bind(on_press=lambda _:
+                            [self.trip_controller.delete_spot(spot, popup),
+                             self.show_popup('Spot deletado', 'Spot deletado com sucesso'),
+                             self.on_list_spots()])
+
+        layout.add_widget(return_btn)
+        layout.add_widget(confirm_button)
+        popup.add_widget(layout)
+        popup.open()
 

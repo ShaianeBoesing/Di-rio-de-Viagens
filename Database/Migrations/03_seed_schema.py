@@ -26,7 +26,7 @@ cursor.execute("""
 cursor.execute("""
   INSERT INTO spots (name, start_hour, end_hour, status, value, rating, trip_id, category_id)
   VALUES ('Praia do Rosa', '2023-06-02 10:00:00', '2023-06-02 18:00:00',
-  'Concluído', 100.00, 2, 1, 1);
+  'Encerrado', 100.00, 2, 1, 1);
 """)
 
 # Inserir dados na tabela comments

@@ -25,11 +25,13 @@ class SpotCreate(Screen):
 
     def on_pre_enter(self):
         self.clear_widgets()
-        self.load_spots()
+        #self.load_spots()
         self.on_create_spot()
 
+    '''
     def load_spots(self):
         self.trip_controller.spots = self.trip_controller.get_spots(self.my_app_instance.traveller_id)
+    '''
 
     def on_create_spot(self):
         self.clear_widgets()
@@ -90,8 +92,8 @@ class SpotCreate(Screen):
         category_vertical_box_layout = BoxLayout(orientation='vertical')
         category_label = Label(text="Categoria *", font_size='16sp',
                                  halign='center', valign='middle')
-        #TODO Na integração acessar traveller logado e pegar seu ID
-        category_list = Category.list_by_traveller(1)
+
+        category_list = Category.list_by_traveller(self.my_app_instance.traveller_id)
 
         dropdown_list = DropDown()
         choosen_category = [None]
@@ -142,8 +144,7 @@ class SpotCreate(Screen):
         table_layout = GridLayout(cols=1, row_default_height=30, size_hint_y=None, padding=(30, 50, 30, 50))
         table_layout.bind(minimum_height=table_layout.setter('height'))
 
-        #TODO Na integração acessar traveller e pegar membros
-        members_list = Member.list_by_traveller(1)
+        members_list = Member.list_by_traveller(self.my_app_instance.traveller_id)
 
         members_list_output = []
         for member in members_list:
@@ -206,10 +207,9 @@ class SpotCreate(Screen):
         else:
             return None
 
-    #TODO transicionar para tela de Trip na integração
     def on_return_option(self, instance):
         self.manager.transition.direction = "left"
-        self.manager.current = "main"
+        self.manager.current = "spot_view"
 
     def on_save_option(self, arguments_list):
         #string não pode ser vazia
@@ -259,11 +259,17 @@ class SpotCreate(Screen):
                                                                            start_hour_datetime,
                                                                            end_hour_datetime,
                                                                            category_object,
-                                                                           spot_members_list)
+                                                                           spot_members_list,
+                                                                           self.my_app_instance.traveller_id)
         if not(create_spot_validation):
             self.show_popup('Erro', message)
         else:
             self.show_popup('Spot criado', message)
+            self.on_return_trip()
+
+    def on_return_trip(self):
+        self.manager.transition.direction = "left"
+        self.manager.current = "trip_list"
 
     def checkbox_remove_check(self, checkbox_state, member, member_list):
         if checkbox_state == 'normal':

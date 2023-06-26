@@ -10,6 +10,7 @@ class TripController:
     def __init__(self):
         self.__trips = {}  # Lista de viagens
         self.__spots = []
+        self.__current_trip = None
 
     def create_trip(self, title, start_date: date, end_date: date, traveller_id, status: str = 'Em planejamento'):
         self.__update_trip_list(traveller_id)
@@ -123,14 +124,22 @@ class TripController:
                 end_date_instance = date(int(tpl_trip[3][0:4]), int(tpl_trip[3][5:7]), int(tpl_trip[3][8:10]))
                 status = tpl_trip[4]
                 trip = Trip(title, start_date_instance, end_date_instance, status)
+                #para já pegar os spots
+                trip.spots = self.get_spots(tpl_trip[0])
                 self.__trips[tpl_trip[1]] = trip
 
-    #TODO na integração essa função provavelmente será usado pra preencher os
+    def get_trip_id(self, trip_object, traveller_id):
+        database = Database()
+        trip_list = database.select(f'SELECT * FROM TRIPS WHERE traveller_id = {traveller_id}')
+        for trip_tuple in trip_list:
+            if trip_tuple[1] == trip_object.title:
+                return trip_tuple[0]
+
     #spots da trip
-    def get_spots(self, traveller_id):
+    def get_spots(self, trip_id):
         #select no DB
         database = Database()
-        registers = database.select("SELECT * FROM spots WHERE traveller_id = ?", (traveller_id,))
+        registers = database.select(f"SELECT * FROM spots WHERE trip_id = {trip_id}")
         if registers is None:
             return []
         else:
@@ -166,7 +175,8 @@ class TripController:
                     start_hour_datetime,
                     end_hour_datetime,
                     category_object,
-                    spot_members_list):
+                    spot_members_list,
+                    traveller_id):
 
         time_check, member, conflciting_spot = self.check_members_spots_time_rule(spot_members_list,
                                                                                   start_hour_datetime,
@@ -181,6 +191,8 @@ class TripController:
                              end_hour_datetime,
                              category_object,
                              spot_members_list)
+        #pegando id da trip
+        current_trip_id = self.get_trip_id(self.current_trip, traveller_id)
         #salvar registro e pegar database_id
         database = Database()
         values = {"name": spot_instance.name,
@@ -189,7 +201,7 @@ class TripController:
                   "status": spot_instance.status,
                   "value": spot_instance.money_spent,
                   "rating": spot_instance.rating,
-                  "trip_id": 1, #TODO na integração inserir id da trip em questão
+                  "trip_id": current_trip_id,
                   "category_id": spot_instance.category.id}
         new_database_id = database.insert("spots", values)
 
@@ -212,7 +224,8 @@ class TripController:
                     category_object,
                     spot_members_list,
                     status,
-                    spot):
+                    spot,
+                    traveller_id):
 
         time_check, member, conflciting_spot = self.check_members_spots_time_rule(spot_members_list,
                                                                                   start_hour_datetime,
@@ -228,8 +241,7 @@ class TripController:
         spot.end_hour = end_hour_datetime
         spot.category = category_object
 
-        #TODO restrição de integridade na integração
-        spot.status = spot.status
+        spot.status = status
 
         #deletando antigos, inserindo novos
         self.delete_spot_members_table_registers(spot.members, spot.spot_database_id)
@@ -238,6 +250,8 @@ class TripController:
         #atualiza a instancia
         spot.members = spot_members_list
 
+        #pegando trip_id
+        current_trip_id = self.get_trip_id(self.current_trip, traveller_id)
         #alterando registros no db
         database = Database()
         values = {"name": spot.name,
@@ -246,11 +260,20 @@ class TripController:
                   "status": spot.status,
                   "value": spot.money_spent,
                   "rating": spot.rating,
-                  "trip_id": 1, #TODO na integração inserir id da trip em questão
+                  "trip_id": current_trip_id,
                   "category_id": spot.category.id}
         database.update("spots", spot.spot_database_id, values)
 
         return True, 'Spot editado com sucesso'
+
+    def delete_spot(self, spot, popup):
+        popup.dismiss()
+        #remover do database
+        database = Database()
+        database.delete('spots', spot.spot_database_id)
+
+        #remover da lista da trip atual
+        self.current_trip.spots.remove(spot)
 
     def check_members_spots_time_rule(self, spot_members_list, start_time, end_time):
         return True, None, None
@@ -265,6 +288,22 @@ class TripController:
         for member in members_list:
             member.delete_spot_member(spot_id)
 
+    def finished_trip_check(self):
+        if self.current_trip.status == 'Encerrado':
+            return True
+        else:
+            False
+
+    def cancel_all_spots(self):
+        spot_list = self.current_trip.spots
+        for spot in spot_list:
+            if spot.status == 'Aberto':
+                spot.status = 'Cancelado'
+
+                #mudando no database
+                database = Database()
+                database.raw_sql(f"UPDATE spots SET status = 'Cancelado' WHERE id = {spot.spot_database_id}")
+
     @property
     def spots(self):
         return self.__spots
@@ -272,3 +311,16 @@ class TripController:
     @spots.setter
     def spots(self, new_spots):
         self.__spots = new_spots
+
+    @property
+    def current_trip(self):
+        return self.__current_trip
+
+    @current_trip.setter
+    def current_trip(self, new_trip):
+        self.__current_trip = new_trip
+
+    @property
+    def trips(self):
+        return self.__trips
+
