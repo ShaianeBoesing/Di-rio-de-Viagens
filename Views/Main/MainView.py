@@ -34,9 +34,9 @@ class MainView(Screen):
         button_grid.add_widget(register_button)
 
         # Add the Member button to the button grid
-        comment_button = Button(text="Comentários")
-        comment_button.bind(on_press=self.go_to_comments)
-        button_grid.add_widget(comment_button)
+        # comment_button = Button(text="Comentários")
+        # comment_button.bind(on_press=self.go_to_comments)
+        # button_grid.add_widget(comment_button)
         #
         # # Add the Member button to the button grid
         # category_button = Button(text="Categorias")
