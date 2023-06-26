@@ -46,7 +46,8 @@ class CommentCreate(Screen):
 			              size=(400, 200))
 			popup.open()
 		else:
-			self.controller.create_comment(self.description_input.text.strip(), self.TEMP_SPOT_ID)
+			spot_id = self.controller.trip_controller.current_spot.spot_database_id
+			self.controller.create_comment(self.description_input.text.strip(), spot_id)
 			self.manager.current = 'comment_list'
 	
 	def on_return(self, *args):

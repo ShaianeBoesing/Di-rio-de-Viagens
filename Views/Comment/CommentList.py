@@ -21,7 +21,8 @@ class CommentList(Screen):
 		self.load()
 	
 	def load_comments(self):
-		self.comments = self.controller.list_comments_by_spot(self.TEMP_SPOT_ID)
+		spot_id = self.controller.trip_controller.current_spot.spot_database_id
+		self.comments = self.controller.list_comments_by_spot(spot_id)
 	
 	def load(self):
 		self.clear_widgets()  # Limpa todos os widgets da tela para não se sobrepor
