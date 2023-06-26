@@ -125,7 +125,7 @@ class SpotView(Screen):
         view_spot_layout = BoxLayout(orientation='vertical')
 
         # Título
-        header_label = Label(text=spot.name, text_size=self.size, font_size='30sp', halign='left', valign='middle')
+        header_label = Label(text=(spot.name + '   ' + spot.start_hour.split(":")[0][8:10]+'/'+ spot.start_hour.split(":")[0][5:7]+'/'+spot.start_hour.split(":")[0][0:4]), text_size=self.size, font_size='30sp', halign='left', valign='middle')
         view_spot_layout.add_widget(header_label)
 
         name_box_layout = BoxLayout(orientation='vertical')
@@ -134,7 +134,7 @@ class SpotView(Screen):
         name_box_layout.add_widget(name_label)
 
         # Nome do spot
-        name = Label(text=spot.name, text_size=self.size, font_size='18sp', halign='left', valign='middle')
+        name = Label(text=(spot.name), text_size=self.size, font_size='18sp', halign='left', valign='middle')
         name_box_layout.add_widget(name)
         view_spot_layout.add_widget(name_box_layout)
 
@@ -151,7 +151,7 @@ class SpotView(Screen):
                                  size=(100, dp(40)), bold=True,
                                  font_size='16sp', halign='center',
                                  valign='middle')
-        start_hour = Label(text=str(spot.start_hour), text_size=self.size,
+        start_hour = Label(text=str(spot.start_hour.split(":")[0][-2:]+':'+spot.start_hour.split(":")[1]), text_size=self.size,
                            size=(100, dp(40)),
                            font_size='18sp', halign='center', valign='middle')
         start_hour_vertical_box_layout.add_widget(start_hour_label)
@@ -161,7 +161,7 @@ class SpotView(Screen):
         end_hour_label = Label(text="Hora de fim", text_size=self.size,
                                size=(100, dp(40)), bold=True,
                                font_size='16sp', halign='center', valign='middle')
-        end_hour = Label(text=str(spot.end_hour), text_size=self.size,
+        end_hour = Label(text=str(spot.end_hour.split(":")[0][-2:]+':'+spot.end_hour.split(":")[1]), text_size=self.size,
                          size=(100, dp(40)),
                          font_size='18sp', halign='center', valign='middle')
         end_hour_vertical_box_layout.add_widget(end_hour_label)
