@@ -185,6 +185,10 @@ class TripController:
             return False, f'''{member.name} já está participando de spot
             {conflciting_spot_name} salvo no mesmo horário'''
 
+        if not self.current_trip.start_date <= date(int(start_hour_datetime[0:4]),int(start_hour_datetime[5:7]),int(start_hour_datetime[8:10])) <= self.current_trip.start_date:
+            return False, 'Spot com data fora dos limites da viagem'
+
+
         spot_instance = Spot(name_field,
                              money_float,
                              start_hour_datetime,
@@ -236,6 +240,9 @@ class TripController:
         if not(time_check):
             return False, f'''{member.name} já está participando de spot
             {conflciting_spot_name} salvo no mesmo horário'''
+
+        if not self.current_trip.start_date <= date(int(start_hour_datetime[0:4]),int(start_hour_datetime[5:7]),int(start_hour_datetime[8:10])) <= self.current_trip.start_date:
+            return False, 'Spot com data fora dos limites da viagem'
 
         #fazendo alterações na intância
         spot.name = name_field
