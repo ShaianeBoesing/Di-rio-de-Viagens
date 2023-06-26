@@ -11,6 +11,7 @@ class TripController:
         self.__trips = {}  # Lista de viagens
         self.__spots = []
         self.__current_trip = None
+        self.__current_spot = None
 
     def create_trip(self, title, start_date: date, end_date: date, traveller_id, status: str = 'Em planejamento'):
         self.__update_trip_list(traveller_id)
@@ -323,6 +324,14 @@ class TripController:
     @current_trip.setter
     def current_trip(self, new_trip):
         self.__current_trip = new_trip
+
+    @property
+    def current_spot(self):
+        return self.__current_spot
+
+    @current_spot.setter
+    def current_spot(self, new_spot):
+        self.__current_spot = new_spot
 
     @property
     def trips(self):

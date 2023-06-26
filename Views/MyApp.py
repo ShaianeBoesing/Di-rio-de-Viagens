@@ -37,7 +37,7 @@ class MyApp(App):
         self.__member_controller = MemberController()
         self.__trip_controller = TripController()
         self.__category_controller = CategoryController(self.__trip_controller)
-        self.__comment_controller = CommentController()
+        self.__comment_controller = CommentController(self.__trip_controller)
 
         self.traveller_id = None
 
