@@ -185,13 +185,25 @@ class SpotView(Screen):
 
         categoria_box_layout = BoxLayout(orientation='vertical')
         #categoria_label
-        categoria_label = Label(text="Categoria", text_size=self.size, bold=True, font_size='16sp', halign='left', valign='middle')
+        categoria_label = Label(text="Rating", text_size=self.size, bold=True, font_size='16sp', halign='left', valign='middle')
         categoria_box_layout.add_widget(categoria_label)
 
         #categoria
         categoria = Label(text=spot.category.name, text_size=self.size, font_size='18sp', halign='left', valign='middle')
         categoria_box_layout.add_widget(categoria)
         view_spot_layout.add_widget(categoria_box_layout)
+
+        # rating_label
+        rating_box_layout = BoxLayout(orientation='vertical')
+        rating_label = Label(text="Avaliação", text_size=self.size, bold=True, font_size='16sp',
+                                halign='left', valign='middle')
+        rating_box_layout.add_widget(rating_label)
+
+        # categoria
+        rating = Label(text=str(spot.rating), text_size=self.size, font_size='18sp', halign='left',
+                          valign='middle')
+        rating_box_layout.add_widget(rating)
+        view_spot_layout.add_widget(rating_box_layout)
 
         members_string = ""
         for member in spot.members:
