@@ -192,7 +192,7 @@ class SpotView(Screen):
         categoria = Label(text=spot.category.name, text_size=self.size, font_size='18sp', halign='left', valign='middle')
         categoria_box_layout.add_widget(categoria)
         view_spot_layout.add_widget(categoria_box_layout)
-
+        habilitar_comentario = not 'Encerrado' == spot.status
         # rating_label
         rating_box_layout = BoxLayout(orientation='vertical')
         rating_label = Label(text="Avaliação", text_size=self.size, bold=True, font_size='16sp',
@@ -200,7 +200,7 @@ class SpotView(Screen):
         rating_box_layout.add_widget(rating_label)
 
         # categoria
-        rating = Label(text=str(spot.rating), text_size=self.size, font_size='18sp', halign='left',
+        rating = Label(text=str(spot.rating if spot.rating is not None else 'Sem avaliação, encerre o spot para avaliar') , text_size=self.size, font_size='18sp', halign='left',
                           valign='middle')
         rating_box_layout.add_widget(rating)
         view_spot_layout.add_widget(rating_box_layout)
@@ -237,7 +237,10 @@ class SpotView(Screen):
 
         return_button = Button(text="Voltar", font_size='18sp')
         return_button.bind(on_press=self.on_list_spots)
-        comment_button = Button(text="Ver comentários", font_size='18sp')
+
+
+
+        comment_button = Button(text="Ver comentários", font_size='18sp', disabled=habilitar_comentario)
         comment_button.bind(on_press=lambda _, x=spot: self.on_comments(spot))
         button_box_layout.add_widget(return_button)
         button_box_layout.add_widget(comment_button)
@@ -357,10 +360,11 @@ class SpotView(Screen):
         money_spent_vertical_box_layout.add_widget(money_spent_input)
 
         #rating
+        habilitar_comentario = not 'Encerrado' == spot.status
         rating_box_layout = BoxLayout(orientation='vertical')
         rating_label = Label(text="Avaliação", font_size='16sp',
                                   halign='center', valign='middle')
-        rating_input = TextInput(text=str(spot.rating), multiline=False)
+        rating_input = TextInput(text=str(spot.rating if spot.rating is not None else ''), multiline=False, disabled = habilitar_comentario)
 
         rating_box_layout.add_widget(rating_label)
         rating_box_layout.add_widget(rating_input)
@@ -522,9 +526,10 @@ class SpotView(Screen):
 
         spot_rating = self.check_name_field(arguments_list[9].text)
         try:
-            if not 0 <= int(spot_rating) <= 5:
-                self.show_popup('Erro na avaliação', 'A avaliação deve ser um numero entre 0 a 5')
-                return
+            if spot_rating is not None:
+                if not 0 <= int(spot_rating) <= 5:
+                    self.show_popup('Erro na avaliação', 'A avaliação deve ser um numero entre 0 a 5')
+                    return
         except Exception as e:
             print(e)
             self.show_popup('Erro na avaliação', 'Ocorreu algum erro inesperado, a avaliação deve ser um numero entre 0 a 5')

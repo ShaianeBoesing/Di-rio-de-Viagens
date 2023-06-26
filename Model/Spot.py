@@ -4,7 +4,7 @@ from Model.Category import Category
 class Spot:
     def __init__(self, name: str, money_spent: float, start_hour: date,
                  end_hour: date, category: Category, members: list,
-                 spot_database_id=None, status='Aberto', rating=0,):
+                 spot_database_id=None, status='Aberto', rating=None,):
         #database_id será necessário ao buscar os comentários específicos
         #o método de criar um novo spot deve criar o id, e o get_spotsjá tera ele pela busca
         self.__name = name

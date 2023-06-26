@@ -177,8 +177,8 @@ class TripController:
                     end_hour_datetime,
                     category_object,
                     spot_members_list,
-                    traveller_id,
-                    spot_rating):
+                    traveller_id
+                    ):
 
         time_check, member, conflciting_spot = self.check_members_spots_time_rule(spot_members_list,
                                                                                   start_hour_datetime,
@@ -193,7 +193,6 @@ class TripController:
                              end_hour_datetime,
                              category_object,
                              spot_members_list,
-                             rating=spot_rating
                              )
         #pegando id da trip
         current_trip_id = self.get_trip_id(self.current_trip, traveller_id)
