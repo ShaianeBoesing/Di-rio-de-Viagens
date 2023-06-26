@@ -225,7 +225,10 @@ class SpotView(Screen):
 
         return_button = Button(text="Voltar", font_size='18sp')
         return_button.bind(on_press=self.on_list_spots)
+        comment_button = Button(text="Ver comentários", font_size='18sp')
+        comment_button.bind(on_press=self.on_comments)
         button_box_layout.add_widget(return_button)
+        button_box_layout.add_widget(comment_button)
 
         view_spot_layout.add_widget(button_box_layout)
 
@@ -625,3 +628,5 @@ class SpotView(Screen):
         popup.add_widget(layout)
         popup.open()
 
+    def on_comments(self, spot, *args):
+        self.manager.current = 'comment_list'
