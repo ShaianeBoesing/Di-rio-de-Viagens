@@ -324,3 +324,14 @@ class TripController:
     def trips(self):
         return self.__trips
 
+    def get_all_trips_from_traveller(self, traveller_id):
+        database = Database()
+        db_tuples = database.select(f'SELECT * FROM trips WHERE traveller_id = {traveller_id}')
+        trips_list = []
+        for register in db_tuples:
+            trip_instance = Trip(register[1], register[2], register[3], register[4])
+            trip_instance.spots = self.get_spots(register[0])
+            trips_list.append(trip_instance)
+
+        return trips_list
+

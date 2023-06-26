@@ -3,8 +3,10 @@ from Model.Category import Category
 
 
 class CategoryController:
-	def __init__(self):
+	def __init__(self, trip_controller_instance):
 		self.__table_name = 'categories'
+		#category controller precisa se comunicar com ele
+		self.__trip_controller = trip_controller_instance
 	
 	def create_category(self, name: str, traveller_id) -> Category:
 		new_category = Category(name)
@@ -43,3 +45,26 @@ class CategoryController:
 	
 	def name_is_valid(self, name: str, traveller_id: int, category_id=None) -> bool:
 		return Category.validate_category_name_by_traveller(name, traveller_id, category_id)
+
+	def get_category_cost_for_trip(self, category_id, traveller_id):
+		trips = self.trip_controller.get_all_trips_from_traveller(traveller_id)
+		sum = 0
+		spot_with_cat_counter = 0
+		highest_value = 0
+		for trip in trips:
+			for spot in trip.spots:
+				if spot.category.id == category_id:
+					if spot.money_spent > highest_value:
+						highest_value = spot.money_spent
+					sum += (spot.money_spent)
+					spot_with_cat_counter += 1
+
+		if spot_with_cat_counter == 0:
+			return 0, 0
+		else:
+			return sum, sum/spot_with_cat_counter, highest_value
+
+
+	@property
+	def trip_controller(self):
+		return self.__trip_controller

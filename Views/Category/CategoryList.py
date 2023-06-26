@@ -44,7 +44,7 @@ class CategoryList(Screen):
 			
 			# Layout para actions
 			actions_layout = BoxLayout(size_hint_y=None, padding=10, size_hint=(None, None), size=(400, dp(40)), minimum_height=dp(40))
-			actions_layout.cols = 2  # definir duas colunas
+			actions_layout.cols = 3  # definir duas colunas
 			actions_layout.col_default_width = 200  # definir largura da coluna como 200 pixels
 
 			# Adiciona o nome à coluna 1 e actions_layout à coluna 2 do table_layout
@@ -52,10 +52,13 @@ class CategoryList(Screen):
 			table_layout.add_widget(actions_layout)
 
 			# Botão de actions
-			edit_button = Button(text="Editar", size_hint=(None, None), size=(200, dp(40)), font_size="16sp")
-			delete_button = Button(text="Excluir", size_hint=(None, None), size=(200, dp(40)), font_size="16sp")
+			edit_button = Button(text="Editar", size_hint=(None, None), size=(130, dp(40)), font_size="16sp")
+			delete_button = Button(text="Excluir", size_hint=(None, None), size=(130, dp(40)), font_size="16sp")
+			calculate_cost_button = Button(text="Calcular custo", size_hint=(None, None), size=(130, dp(40)), font_size="16sp")
 			edit_button.bind(on_release=lambda _, category_id=category['id']: self.on_edit_category(category_id))
 			delete_button.bind(on_release=lambda _, category_id=category['id']: self.on_delete_category(category_id))
+			calculate_cost_button.bind(on_release=lambda _, category_id=category['id']: self.on_calculate_cost(category_id))
+			actions_layout.add_widget(calculate_cost_button)
 			actions_layout.add_widget(edit_button)
 			actions_layout.add_widget(delete_button)
 			
@@ -65,6 +68,7 @@ class CategoryList(Screen):
 		# Botões
 		buttons_layout = BoxLayout(size_hint=(1, 0.1), padding=10)
 		back_button = Button(text="Voltar", font_size='18sp')
+		new_button = Button(text="Novo", font_size='18sp')
 		new_button = Button(text="Novo", font_size='18sp')
 		buttons_layout.add_widget(back_button)
 		buttons_layout.add_widget(new_button)
@@ -90,6 +94,12 @@ class CategoryList(Screen):
 	def on_delete_category(self, category_id):
 		self.confirm_delete_category(category_id)
 		
+	def on_calculate_cost(self, category_id):
+		traveller_id =  self.my_app_instance.traveller_id
+		sum, mean, highest_value = self.controller.get_category_cost_for_trip(category_id, traveller_id)
+		self.show_popup('Relatório custo gasto com essa categoria pelo viajante',
+		  				f'Total Gasto: {sum}\nGasto médio: {mean}\nValor mais alto gasto: {highest_value}')
+
 	def delete_category(self, category_id, popup):
 		self.controller.delete_category(category_id)
 		popup.dismiss()
@@ -113,3 +123,13 @@ class CategoryList(Screen):
 	def on_back(self, *args):
 		self.manager.transition.direction = "down"
 		self.manager.current = "trip_list"
+
+	def show_popup(self, title, text):
+		popup = Popup(title=title, size_hint=(None, None), size=(625, 200))
+		layout = GridLayout(cols=1, spacing=10, padding=10)
+		layout.add_widget(Label(text=text))
+		btn = Button(text="voltar", size_hint=(1, None), height=50)
+		btn.bind(on_press=popup.dismiss)
+		layout.add_widget(btn)
+		popup.add_widget(layout)
+		popup.open()
