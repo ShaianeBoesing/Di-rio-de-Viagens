@@ -166,14 +166,14 @@ class SpotCreate(Screen):
             checkbox = CheckBox()
 
             #basicamente um if, elif, else, só que tem que ser tudo em lambda
-            checkbox.bind(on_press=lambda _, x=member:
+            checkbox.bind(on_press=lambda _, x=member, y=checkbox:
                           members_list_output.append(x) if
-                          self.checkbox_append_check(checkbox.state, x,
+                          self.checkbox_append_check(y.state, x,
                                                members_list_output) else
                           (members_list_output.remove(self.checkbox_find_equivalent(x, members_list_output)) if
-                           self.checkbox_remove_check(checkbox.state, x,
+                           self.checkbox_remove_check(y.state, x,
                                                       members_list_output) else
-                           True==True))
+                           False==True))
 
             line.add_widget(checkbox)
 

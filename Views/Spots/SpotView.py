@@ -404,14 +404,14 @@ class SpotView(Screen):
                 checkbox.active = True
 
             #basicamente um if, elif, else, só que tem que ser tudo em lambda
-            checkbox.bind(on_press=lambda _, x=member:
+            checkbox.bind(on_press=lambda _, x=member, y=checkbox:
                           members_list_output.append(x) if
-                          self.checkbox_append_check(checkbox.state, x,
+                          self.checkbox_append_check(y.state, x,
                                                members_list_output) else
                           (members_list_output.remove(self.checkbox_find_equivalent(x, members_list_output)) if
-                           self.checkbox_remove_check(checkbox.state, x,
+                           self.checkbox_remove_check(y.state, x,
                                                       members_list_output) else
-                           True==True))
+                           False==True))
 
             line.add_widget(checkbox)
 
@@ -470,9 +470,7 @@ class SpotView(Screen):
                                                spot,
                                                start_date_input,
                                                rating_input]:
-                         [self.on_save_option(x), print('member_list eh ',
-                                                        members_list_output),
-                          self.on_update_spot_option])
+                         [self.on_save_option(x), self.on_update_spot_option])
 
         save_button_box_layout.add_widget(Label())
         save_button_box_layout.add_widget(save_button)
@@ -495,7 +493,8 @@ class SpotView(Screen):
 
     def checkbox_remove_check(self, checkbox_state, member, member_list):
         if checkbox_state == 'normal':
-            if member.id in [j.id for j in member_list]:
+            lista_ids = [j.id for j in member_list]
+            if member.id in lista_ids:
                 return True
             else:
                 return False
@@ -503,7 +502,8 @@ class SpotView(Screen):
 
     def checkbox_append_check(self, checkbox_state, member, member_list):
         if checkbox_state == 'down':
-            if member.id not in [j.id for j in member_list]:
+            lista_ids = [j.id for j in member_list]
+            if member.id not in lista_ids:
                 return True
             else:
                 return False

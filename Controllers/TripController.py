@@ -3,7 +3,7 @@ from Database.Database import Database
 from Model.Spot import Spot
 from Model.Category import Category
 from Model.Member import Member
-from datetime import date
+from datetime import date, datetime
 from Model.Trip import Trip
 
 class TripController:
@@ -180,12 +180,12 @@ class TripController:
                     traveller_id
                     ):
 
-        time_check, member, conflciting_spot = self.check_members_spots_time_rule(spot_members_list,
+        time_check, member, conflciting_spot_name = self.check_members_spots_time_rule(spot_members_list,
                                                                                   start_hour_datetime,
                                                                                   end_hour_datetime)
         if not(time_check):
             return False, f'''{member.name} já está participando de spot
-            {conflciting_spot.name} salvo no mesmo horário'''
+            {conflciting_spot_name} salvo no mesmo horário'''
 
         spot_instance = Spot(name_field,
                              money_float,
@@ -231,12 +231,12 @@ class TripController:
                     traveller_id,
                     spot_rating):
 
-        time_check, member, conflciting_spot = self.check_members_spots_time_rule(spot_members_list,
+        time_check, member, conflciting_spot_name = self.check_members_spots_time_rule(spot_members_list,
                                                                                   start_hour_datetime,
                                                                                   end_hour_datetime)
         if not(time_check):
             return False, f'''{member.name} já está participando de spot
-            {conflciting_spot.name} salvo no mesmo horário'''
+            {conflciting_spot_name} salvo no mesmo horário'''
 
         #fazendo alterações na intância
         spot.name = name_field
@@ -280,8 +280,24 @@ class TripController:
         self.current_trip.spots.remove(spot)
 
     def check_members_spots_time_rule(self, spot_members_list, start_time, end_time):
+        database = Database()
+        start_time_parameter = datetime.strptime(start_time, '%Y-%m-%d %H:%M:%S')
+        end_time_parameter = datetime.strptime(end_time, '%Y-%m-%d %H:%M:%S')
+
+        for member in spot_members_list:
+            member_spots = database.select(f'SELECT spot_id FROM spot_members WHERE member_id={member.id}')
+            for member_spot in member_spots:
+                spot_id = member_spot[0]
+                spot_registers = database.select(f'SELECT * FROM spots WHERE id={spot_id}')
+                for spot in spot_registers:
+                    print('spot eh', spot)
+                    start_hour_datetime_object = datetime.strptime(spot[2], '%Y-%m-%d %H:%M:%S')
+                    end_hour_datetime_object = datetime.strptime(spot[3], '%Y-%m-%d %H:%M:%S')
+                    if start_hour_datetime_object >= start_time_parameter and start_hour_datetime_object <= end_time_parameter:
+                        return False, member, spot[1]
+                    if end_hour_datetime_object >= start_time_parameter and end_hour_datetime_object <= end_time_parameter:
+                        return False, member, spot[1]
         return True, None, None
-        pass
 
     def create_spot_members_table_registers(self, members_list, spot_id):
         #print('members_list eh ', members_list)
