@@ -301,7 +301,7 @@ class SpotCreate(Screen):
 
     def on_return_trip(self):
         self.manager.transition.direction = "left"
-        self.manager.current = "spot_view"
+        self.manager.current = "trip_list"
 
     def checkbox_remove_check(self, checkbox_state, member, member_list):
         if checkbox_state == 'normal':
