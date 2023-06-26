@@ -180,9 +180,7 @@ class TripController:
                     traveller_id
                     ):
 
-        time_check, member, conflciting_spot_name = self.check_members_spots_time_rule(spot_members_list,
-                                                                                  start_hour_datetime,
-                                                                                  end_hour_datetime)
+        time_check, member, conflciting_spot_name = self.check_members_spots_time_rule_create(spot_members_list, start_hour_datetime, end_hour_datetime)
         if not(time_check):
             return False, f'''{member.name} já está participando de spot
             {conflciting_spot_name} salvo no mesmo horário'''
@@ -279,6 +277,26 @@ class TripController:
 
         #remover da lista da trip atual
         self.current_trip.spots.remove(spot)
+
+    def check_members_spots_time_rule_create(self, spot_members_list, start_time, end_time):
+        database = Database()
+        start_time_parameter = datetime.strptime(start_time, '%Y-%m-%d %H:%M:%S')
+        end_time_parameter = datetime.strptime(end_time, '%Y-%m-%d %H:%M:%S')
+
+        for member in spot_members_list:
+            member_spots = database.select(f'SELECT spot_id FROM spot_members WHERE member_id={member.id}')
+            for member_spot in member_spots:
+                spot_id = member_spot[0]
+                spot_registers = database.select(f'SELECT * FROM spots WHERE id={spot_id}')
+                for spot in spot_registers:
+                    start_hour_datetime_object = datetime.strptime(spot[2], '%Y-%m-%d %H:%M:%S')
+                    end_hour_datetime_object = datetime.strptime(spot[3], '%Y-%m-%d %H:%M:%S')
+                    if start_hour_datetime_object >= start_time_parameter and start_hour_datetime_object <= end_time_parameter:
+                        return False, member, spot[1]
+                    if end_hour_datetime_object >= start_time_parameter and end_hour_datetime_object <= end_time_parameter:
+                        return False, member, spot[1]
+        return True, None, None
+
 
     def check_members_spots_time_rule(self, spot_members_list, start_time, end_time, current_spot):
         database = Database()
