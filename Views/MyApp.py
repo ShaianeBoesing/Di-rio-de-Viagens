@@ -2,7 +2,7 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager
 from kivy.lang.builder import Builder
 from Controllers.MemberController import MemberController
-from Controllers.UserController import UserController
+from Controllers.TravellerController import TravellerController
 from Controllers.CategoryController import CategoryController
 from Controllers.TripController import TripController
 from Controllers.CommentController import CommentController
@@ -28,12 +28,12 @@ from Views.Comment.CommentEdit import CommentEdit
 class WindowManager(ScreenManager):
 	def __init__(self, **kwargs):
 		super(MyApp, self).__init__(**kwargs)
-		self.__user_controller = UserController()
+		self.__user_controller = TravellerController()
 
 class MyApp(App):
     def __init__(self, **kwargs):
         super(MyApp, self).__init__(**kwargs)
-        self.__user_controller = UserController()
+        self.__user_controller = TravellerController()
         self.__member_controller = MemberController()
         self.__trip_controller = TripController()
         self.__category_controller = CategoryController(self.__trip_controller)

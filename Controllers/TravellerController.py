@@ -1,9 +1,9 @@
 import sqlite3
-from Model.User import User
+from Model.Traveller import Traveller
 import hashlib
 import re
 
-class UserController:
+class TravellerController:
     def __init__(self):
         self.conn = sqlite3.connect('Database/Migrations/diary.db')
         self.create_user_table()
@@ -70,7 +70,7 @@ class UserController:
         result = cursor.fetchone()
         if result is None:
             return None
-        return User(result[1], result[2], result[3], result[0])
+        return Traveller(result[1], result[2], result[3], result[0])
 
     def md5_to_hash_password(self, password: str):
         hashed_password = hashlib.md5(password.encode())

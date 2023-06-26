@@ -5,14 +5,14 @@ from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
-from Controllers.UserController import UserController
+from Controllers.TravellerController import TravellerController
 from kivy.uix.popup import Popup
 
 #TODO alterar on_login
 #show_popup e on_return ficam identicos, porem nao fazemos herança dupla
 
 class LoginView(Screen):
-    def __init__(self, controller: UserController, my_app_instance, **kwargs):
+    def __init__(self, controller: TravellerController, my_app_instance, **kwargs):
         super().__init__(**kwargs)
         self.user_contoller = controller
         self.my_app_instance = my_app_instance

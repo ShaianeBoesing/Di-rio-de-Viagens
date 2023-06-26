@@ -1,4 +1,4 @@
-class User:
+class Traveller:
     def __init__(self, username: str, name: str, password: str, traveller_id=None):
         self.__username = username
         self.__name = name

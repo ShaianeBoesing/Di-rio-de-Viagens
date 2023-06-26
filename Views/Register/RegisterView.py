@@ -5,12 +5,12 @@ from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
-from Controllers.UserController import UserController
+from Controllers.TravellerController import TravellerController
 from kivy.uix.popup import Popup
 
 
 class RegisterView(Screen):
-    def __init__(self, controller:UserController, **kwargs):
+    def __init__(self, controller:TravellerController, **kwargs):
         super().__init__(**kwargs)
         self.user_contoller = controller
         # Create the GridLayout for the register screen
