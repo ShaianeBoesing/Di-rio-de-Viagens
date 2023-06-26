@@ -60,7 +60,7 @@ class CategoryController:
 					spot_with_cat_counter += 1
 
 		if spot_with_cat_counter == 0:
-			return 0, 0
+			return 0, 0, 0
 		else:
 			return sum, sum/spot_with_cat_counter, highest_value
 
