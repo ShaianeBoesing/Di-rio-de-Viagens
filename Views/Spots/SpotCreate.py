@@ -58,7 +58,7 @@ class SpotCreate(Screen):
 
         #Data e Hora
         horizontal_box_layout = BoxLayout()
-        horizontal_box_layout.cols = 4
+        horizontal_box_layout.cols = 3
 
         start_hour_vertical_box_layout = BoxLayout(orientation='vertical')
         start_hour_label = Label(text="Hora de início *", font_size='16sp',
@@ -74,12 +74,25 @@ class SpotCreate(Screen):
                                  halign='center', valign='middle')
 
         end_hour_input = TextInput(multiline=False)
+        ###
+        start_date_vertical_box_layout = BoxLayout(orientation='vertical')
+        start_date_label = Label(text="Data *", font_size='16sp',
+                                 halign='center', valign='middle')
+
+        start_date_input = TextInput(multiline=False)
+
+        start_date_vertical_box_layout.add_widget(start_date_label)
+        start_date_vertical_box_layout.add_widget(start_date_input)
+
+        ###
 
         end_hour_vertical_box_layout.add_widget(end_hour_label)
         end_hour_vertical_box_layout.add_widget(end_hour_input)
 
         horizontal_box_layout.add_widget(start_hour_vertical_box_layout)
         horizontal_box_layout.add_widget(end_hour_vertical_box_layout)
+        horizontal_box_layout.add_widget(start_date_vertical_box_layout)
+        horizontal_box_layout.add_widget(Label())
         horizontal_box_layout.add_widget(Label())
         horizontal_box_layout.add_widget(Label())
 
@@ -179,7 +192,8 @@ class SpotCreate(Screen):
                                                end_hour_input,
                                                choosen_category,
                                                money_spent_input,
-                                               members_list_output]:
+                                               members_list_output,
+                                               start_date_input]:
                          self.on_save_option(x))
 
         save_button_box_layout.add_widget(Label())
@@ -221,16 +235,30 @@ class SpotCreate(Screen):
         #testes de campo de data de início
         start_hour_datetime = self.check_time_field(arguments_list[1].text)
         if start_hour_datetime is None:
-            self.show_popup('Erro data e hora de início',
-                            'A data e hora deve estar no formato \"AAAA-MM-DD HH:MM:SS\"')
+            self.show_popup('Erro hora de início',
+                            'A hora deve estar no formato \"HH:MM\"')
+            # 'A data e hora deve estar no formato \"AAAA-MM-DD HH:MM:SS\"')
             return
+        else:
+            start_hour_datetime = start_hour_datetime + ':00'
 
         #testes de campo de data de fim
         end_hour_datetime = self.check_time_field(arguments_list[2].text)
         if end_hour_datetime is None:
-            self.show_popup('Erro Data e hora de fim',
-                            'A data e hora deve estar no formato \"AAAA-MM-DD HH:MM:SS\"')
+            self.show_popup('Erro hora de fim',
+                            'A hora deve estar no formato \"HH:MM\"')
             return
+        else:
+            end_hour_datetime = end_hour_datetime + ':00'
+
+        # testes de campo de data
+        start_date = arguments_list[6].text
+        if (len(start_date)!=10) or (len(start_date.split('/')[2]) != 4 or len(start_date.split('/')[1]) != 2 or len(start_date.split('/')[0]) != 2):
+            self.show_popup('Erro data',
+                            'A data deve estar no formato \"DD/MM/AAAA\"')
+            return
+        else:
+            start_date = f'{(start_date.split("/")[2])}-{(start_date.split("/")[1])}-{(start_date.split("/")[0])}'
 
         #checar se hora de início é maior que hora fim 
         if start_hour_datetime >= end_hour_datetime:
@@ -256,8 +284,8 @@ class SpotCreate(Screen):
         spot_members_list = arguments_list[5]
         create_spot_validation, message = self.trip_controller.create_spot(name_field,
                                                                            money_float,
-                                                                           start_hour_datetime,
-                                                                           end_hour_datetime,
+                                                                           (start_date + ' ' + start_hour_datetime),
+                                                                           (start_date + ' ' + end_hour_datetime),
                                                                            category_object,
                                                                            spot_members_list,
                                                                            self.my_app_instance.traveller_id)
@@ -311,13 +339,14 @@ class SpotCreate(Screen):
 
     def check_time_field(self, time_field: str):
         try:
-            time_field = time_field.strip()
-            datetime_object = datetime.strptime(time_field,
-                                                   '%Y-%m-%d %H:%M:%S')
-        except:
+            if (len(time_field)!=5) or (len(time_field.split(':')[0]) != 2 or len(time_field.split(':')[1]) != 2):
+                int(time_field.split(':'[0]))
+                int(time_field.split(':'[1]))
+                raise Exception
+        except Exception:
             return None
         else:
-            return datetime_object
+            return time_field
 
     def check_category_field(self, category_field: list):
         if category_field[0] is None:
